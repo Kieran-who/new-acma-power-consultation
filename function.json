@@ -18,9 +18,12 @@
           "type": "string",
           "description": "Overall, considering the whole of the submission, does the submission support, oppose, or have a neutral stance towards the proposed laws? Make sure you truly understand the submissions position, some confusion may arise where the submission is supporting another submission, but this does not mean the submission is in support of the proposed changes. If you are unsure, such as in this situation, respond with 'unsure'. (return only one of the following options: 'support', 'oppose', 'neutral', 'unsure')"
         },
-        "motivation": {
-          "type": "string",
-          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). E.g. 1. Privacy\n2. Freedom of speech\n3. Complexity.\n\nIf only one or two key motivations, return only these one or two."
+        "motivations": {
+          "type": "array",
+          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). E.g.\n\n['Privacy', 'Freedom of speech', 'Complexity']\n\nIf only one or two key motivations, return only these one or two.",
+          "items": {
+            "type": "string"
+          }
         },
         "regulation": {
           "type": "string",

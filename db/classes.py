@@ -38,6 +38,12 @@ weav_classes = {
                     skip_vectorization=True,
                  ),
                  wvc.config.Property(
+                    name="motivations",
+                    data_type=wvc.config.DataType.TEXT_ARRAY,
+                    description= "Top 3 motivations for the submission.",
+                    skip_vectorization=True,
+                 ),
+                 wvc.config.Property(
                     name="regulation",
                     data_type=wvc.config.DataType.TEXT,
                     description= "Does this submission make any comment on the form of regulation provided?",

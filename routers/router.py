@@ -6,6 +6,11 @@ from pathlib import Path
 
 router = APIRouter()
 
+@router.get("/api/count")
+async def get_meta():
+    dm = DocumentManager()
+    return dm.get_docs_metadata()
+
 @router.get("/{file_path:path}")
 async def root(file_path: str):
     if file_path:
@@ -24,6 +29,7 @@ async def get(request: DocRetrieve):
         return dm.search_docs(search)
     else:
         return dm.get_all_docs(limit=100)
+    
 
 @router.post("/api/content")
 async def content(request: ContentRequest):    

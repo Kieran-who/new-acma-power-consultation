@@ -17,8 +17,6 @@
         margin: 0;
         max-width: 100vw;
         max-height: 100vh;
-        overflow-y: hidden;
-        overflow-x: hidden;
       }
       .item {
         background-color: #f0f0f00d;
@@ -62,7 +60,6 @@
         height: auto;
       }
       table {
-        width: 100%;
         border-collapse: collapse;
       }
       th,
@@ -70,9 +67,6 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
       }
       @media screen and (max-width: 600px) {
         table,
@@ -100,7 +94,6 @@
           border-bottom: 1px solid #eee;
           position: relative;
           padding-left: 50%;
-          text-align: right;
         }
 
         td:before {
@@ -124,6 +117,7 @@
         align-items: center;
         font-family: Arial, Helvetica, sans-serif;
         padding-bottom: 3%;
+        max-width: 100%;
       "
     >
       <!-- header -->
@@ -132,41 +126,44 @@
         style="
           display: flex;
           align-items: center;
-          justify-content: end;
+          justify-content: space-between;
           padding-top: 15px;
           padding-bottom: 15px;
-          padding-right: calc(100vw / 100 * 3);
-          padding-left: calc(100vw / 100 * 3);
+          padding-left: 3%;
+          padding-right: 3%;
           max-height: 40px;
           width: 100%;
         "
       >
+        <p id="count"></p>
         <!-- toggle graph -->
-        <i
-          class="bx bx-map"
-          id="graph-toggle"
-          onclick="toggleGraph()"
-          style="font-size: 28px; cursor: pointer; color: #007bff"
-        ></i>
-        <!-- Search input bar -->
-        <input
-          id="search-bar"
-          type="text"
-          placeholder="Search..."
-          style="
-            display: none;
-            margin-right: 10px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #007bff;
-          "
-        />
-        <!-- Search icon -->
-        <i
-          class="bx bx-search"
-          onclick="toggleSearchBarAndSearch()"
-          style="font-size: 28px; cursor: pointer; color: #007bff"
-        ></i>
+        <div style="display: flex">
+          <i
+            class="bx bx-map"
+            id="graph-toggle"
+            onclick="toggleGraph()"
+            style="font-size: 28px; cursor: pointer; color: #007bff"
+          ></i>
+          <!-- Search input bar -->
+          <input
+            id="search-bar"
+            type="text"
+            placeholder="Search..."
+            style="
+              display: none;
+              margin-right: 10px;
+              padding: 5px;
+              border-radius: 5px;
+              border: 1px solid #007bff;
+            "
+          />
+          <!-- Search icon -->
+          <i
+            class="bx bx-search"
+            onclick="toggleSearchBarAndSearch()"
+            style="font-size: 28px; cursor: pointer; color: #007bff"
+          ></i>
+        </div>
       </div>
       <!-- Display list of documents -->
       <div
@@ -174,8 +171,10 @@
         style="
           display: none;
           max-height: calc(100vh - 58px);
-          overflow-y: scroll;
-          padding: 0 3% 3% 3%;
+          overflow-y: auto;
+          overflow-x: auto;
+          padding: 0% 3% 2% 3%;
+          max-width: 100%;
         "
       ></div>
       <!-- graph container -->
@@ -324,6 +323,15 @@
       async function markItemRead(docID) {
         return;
       }
+      async function getMeta() {
+        const res = await fetch(`/api/count`);
+        const data = await res.json();
+        const count = data[0].total_count;
+        document.getElementById(
+          'count'
+        ).innerHTML = `Total Documents: ${count}`;
+      }
+
       // Function to list documents
       async function fetchDataAndRender(searchString) {
         document.getElementById('myChart').style.display = 'none';
@@ -361,8 +369,6 @@
     `;
         const tbody = document.createElement('tbody');
 
-        console.log(data);
-
         // Assuming each item in 'data' represents a row in the table
         data.forEach((item) => {
           const row = document.createElement('tr');
@@ -371,7 +377,9 @@
             <td>${item.substantive_submission}</td>
             <td>${item.responder_category}</td>
             <td>${item.support}</td>
-            <td>${item.motivation.replace(/\n/g, '<br>')}</td>
+            <td><ol>${item.motivations
+              .map((i) => `<li>${i}</li>`)
+              .join('')}</ol></td>
             <td>${item.regulation}</td>
             <td>${item.perceived_impact}</td>
             <td>${item.regulator_trust}</td>
@@ -410,6 +418,8 @@
         // Call fetchDataAndRender with the search string
         fetchDataAndRender(searchInput);
       }
+      getMeta();
+      fetchDataAndRender(null);
     </script>
   </body>
 </html>
