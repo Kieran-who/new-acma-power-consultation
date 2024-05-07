@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>ACMA Submission Research Portal</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow-y: hidden;
+        overflow-x: hidden;
+      }
+      .item {
+        background-color: #f0f0f00d;
+        border-radius: 8px;
+        border: solid 1px #007bff2f;
+        padding: 20px;
+        margin-bottom: 15px;
+      }
+      .item h3 {
+        margin: 0 0 10px 0;
+      }
+      .item p {
+        margin: 0;
+        font-size: 0.9em;
+      }
+      .item a {
+        display: block;
+        margin-top: 10px;
+        text-decoration: none;
+        color: #007bff;
+      }
+      #md-container h1 {
+        margin-top: 0.6em;
+        margin-bottom: 0.6em;
+      }
+      #md-container h2 {
+        margin-top: 0.4em;
+        margin-bottom: 0.4em;
+      }
+      #md-container h3 {
+        margin-top: 0.3em;
+        margin-bottom: 0.3em;
+      }
+      #md-container p {
+        margin-top: 0.2em;
+        margin-bottom: 0.3em;
+        text-align: justify;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      @media screen and (max-width: 600px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        thead tr {
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+        }
+
+        tr {
+          border: 1px solid #ccc;
+          margin-bottom: 5px;
+        }
+
+        td {
+          border: none;
+          border-bottom: 1px solid #eee;
+          position: relative;
+          padding-left: 50%;
+          text-align: right;
+        }
+
+        td:before {
+          content: attr(data-label);
+          position: absolute;
+          left: 0;
+          width: 50%;
+          padding-left: 15px;
+          font-weight: bold;
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+        padding-bottom: 3%;
+      "
+    >
+      <!-- header -->
+      <div
+        id="header"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-right: calc(100vw / 100 * 3);
+          padding-left: calc(100vw / 100 * 3);
+          max-height: 40px;
+          width: 100%;
+        "
+      >
+        <!-- toggle graph -->
+        <i
+          class="bx bx-map"
+          id="graph-toggle"
+          onclick="toggleGraph()"
+          style="font-size: 28px; cursor: pointer; color: #007bff"
+        ></i>
+        <!-- Search input bar -->
+        <input
+          id="search-bar"
+          type="text"
+          placeholder="Search..."
+          style="
+            display: none;
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #007bff;
+          "
+        />
+        <!-- Search icon -->
+        <i
+          class="bx bx-search"
+          onclick="toggleSearchBarAndSearch()"
+          style="font-size: 28px; cursor: pointer; color: #007bff"
+        ></i>
+      </div>
+      <!-- Display list of documents -->
+      <div
+        id="data-container"
+        style="
+          display: none;
+          max-height: calc(100vh - 58px);
+          overflow-y: scroll;
+          padding: 0 3% 3% 3%;
+        "
+      ></div>
+      <!-- graph container -->
+      <canvas
+        id="myChart"
+        style="width: 100%; max-width: 700px; display: none; padding: 2%"
+      ></canvas>
+      <!-- markdown reader -->
+      <div
+        id="md-container"
+        style="
+          display: none;
+          flex-direction: column;
+          max-height: calc(100vh - 58px);
+          overflow-y: scroll;
+          padding: 0 3% 0 3%;
+        "
+      ></div>
+    </div>
+    <script>
+      let myChart;
+      // graph
+      function toggleGraph() {
+        const graph = document.getElementById('myChart');
+        if (graph.style.display !== 'none') {
+          graph.style.display = 'none';
+        } else {
+          graph.style.display = 'block';
+        }
+      }
+      function grapher(data) {
+        document.getElementById('graph-toggle').style.display = 'block';
+        if (myChart) {
+          myChart.destroy();
+        }
+        const dataV = [];
+        for (let i = 0; i < data.length; i++) {
+          let dataObj = {
+            label: data[i].name,
+            data: [
+              {
+                x: data[i]._additional.featureProjection.vector[0],
+                y: data[i]._additional.featureProjection.vector[1],
+              },
+            ],
+          };
+          if (i === 0) {
+            dataObj['pointStyle'] = 'crossRot';
+            dataObj['pointRadius'] = 8;
+            dataObj['pointBorderColor'] = 'red';
+          }
+          dataV.push(dataObj);
+        }
+        myChart = new Chart('myChart', {
+          type: 'scatter',
+          data: {
+            datasets: dataV,
+          },
+          options: {
+            onClick: (e, elements, chart) => {
+              const dataSet = data;
+              const item = chart.getElementsAtEventForMode(
+                e,
+                'nearest',
+                { intersect: true },
+                true
+              );
+              // Get dataset index
+              const index = item[0].datasetIndex;
+              // Get url
+              const url = dataSet[index].url;
+              toggleGraph();
+              getContent(url, dataSet[index]._additional.id);
+            },
+            scales: {
+              x: {
+                // Targeting the x axis
+                ticks: {
+                  display: false, // Hides the ticks labels on the x axis
+                },
+                title: {
+                  display: false, // Hides the axis title if any
+                },
+              },
+              y: {
+                // Targeting the y axis
+                ticks: {
+                  display: false, // Hides the ticks labels on the y axis
+                },
+                title: {
+                  display: false, // Hides the axis title if any
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                // This targets the chart's legend
+                display: false, // Hides the legend
+              },
+            },
+          },
+        });
+      }
+
+      // MARKDOWN FORMATTING
+      // Initialize markdown-it
+      var md = window.markdownit();
+      // Function to convert Markdown to HTML
+      function convertMarkdownToHTML(markdown) {
+        const toConver = markdown.split('<!--')[0];
+        const htmlContent = md.render(toConver);
+        return htmlContent;
+      }
+      async function getContent(itemUrl, doc_id) {
+        const res = await fetch(`/api/content`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password: window.tempHash,
+            path: itemUrl,
+            doc_id: doc_id,
+          }),
+        });
+        const data = await res.json();
+        const container = document.getElementById('md-container');
+        container.innerHTML = '';
+        container.innerHTML = convertMarkdownToHTML(data.file);
+        document.getElementById('data-container').style.display = 'none';
+        container.style.display = 'flex';
+        let innerCurrent = `<i class="bx bx-map" id="graph-toggle" onclick="toggleGraph()" style="font-size: 28px; cursor: pointer; color: rgb(0, 123, 255); display: none;"></i>
+        <!-- Search input bar -->
+        <input id="search-bar" type="text" placeholder="Search..." style="
+            display: none;
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #007bff;
+          ">
+        <!-- Search icon -->
+        <i class="bx bx-search" onclick="toggleSearchBarAndSearch()" style="font-size: 28px; cursor: pointer; color: #007bff"></i>`;
+        document.getElementById(
+          'header'
+        ).innerHTML = `<i class='bx bxs-book-add' style="font-size: 28px; cursor: pointer; color: #007bff" onclick="markItemRead('${doc_id}')"></i>${innerCurrent}`;
+        grapher(data.nearby);
+      }
+      async function markItemRead(docID) {
+        return;
+      }
+      // Function to list documents
+      async function fetchDataAndRender(searchString) {
+        document.getElementById('myChart').style.display = 'none';
+        document.getElementById('graph-toggle').style.display = 'none';
+        let fetchBody = {};
+        fetchBody['search'] =
+          searchString && searchString !== undefined ? searchString : null;
+
+        const res = await fetch(`/api/docs`, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fetchBody),
+        });
+        const data = await res.json();
+        const container = document.getElementById('data-container');
+        container.innerHTML = '';
+
+        // Create the table and its header
+        const table = document.createElement('table');
+        table.innerHTML = `
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Substantive Submission</th>
+                <th>Responder Category</th>
+                <th>Support</th>
+                <th>Motivation</th>
+                <th>Regulation</th>
+                <th>Perceived Impact</th>
+                <th>Regulator Trust</th>
+                <th>Author</th>
+                <th>File</th>
+            </tr>
+        </thead>
+    `;
+        const tbody = document.createElement('tbody');
+
+        console.log(data);
+
+        // Assuming each item in 'data' represents a row in the table
+        data.forEach((item) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.file_name.split('-')[0]}</td>
+            <td>${item.substantive_submission}</td>
+            <td>${item.responder_category}</td>
+            <td>${item.support}</td>
+            <td>${item.motivation.replace(/\n/g, '<br>')}</td>
+            <td>${item.regulation}</td>
+            <td>${item.perceived_impact}</td>
+            <td>${item.regulator_trust}</td>
+            <td>${item.author}</td>
+            <td><a href="/${item.file_name}.pdf" target="_blank">${
+            item.file_name
+          }</a></td>
+        `;
+          tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+        container.style.display = 'block';
+      }
+
+      // Function to toggle the search bar
+      function toggleSearchBarAndSearch() {
+        const searchBar = document.getElementById('search-bar');
+        if (searchBar.style.display === 'block') {
+          // Perform search if search bar is open
+          searchFunction(searchBar.value);
+          // Hide search bar after search
+          searchBar.style.display = 'none';
+        } else {
+          // Show search bar if it's not already open
+          searchBar.style.display = 'block';
+          searchBar.focus();
+        }
+      }
+
+      // Function to perform search
+      function searchFunction(searchInput) {
+        const container = document.getElementById('data-container');
+        container.style.display = 'none';
+        // Call fetchDataAndRender with the search string
+        fetchDataAndRender(searchInput);
+      }
+    </script>
+  </body>
+</html>

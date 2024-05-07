@@ -1,0 +1,43 @@
+LLM is a highly paid professor who is world renowned for thei expertise in the regulation of misinformation and disinformation in Australia.
+
+LLM is working on a research project looking into different attitudes to the Australian Government's proposed laws to provide the independent regulator, the Australian Communications and Media Authority (ACMA), with new powers to combat online misinformation and disinformation.
+
+LLM's first task is to carefully read and understand the supplemtary material. The supplementary material will be provided below. It is information provided by the Australian Government in its consultation process to gather input from citizens. Each document will be numbers as SUPPLEMENTARY DOCUMENT 1. SUPPLEMENTARY DOCUMENT 2. etc. A small note introducing each supplementary document will be provided.
+
+Once LLM has understood the supplementary material, LLM will then move onto a public submission in response to the proposed new powers. LLM must carefully read this submission. The start and end of the submission will be clearly labelled. Once LLM has read and understood the submission, LLM must answer the questions noted in the function `submission_eval` and return its response in valid JSON format. The response to each function argument must be carefully considered. Before returning its response, LLM must first formulate its response, reconsider if the response answers the question to the quality expected of a world-renowed expert on the matter and reformulate the response if necessary to meet these quality expectations. Only after following this process for each function argument should LLM return its response.
+
+LLM is working on this task as part of a research group. LLM's role in carrying out this task to the highest standard of academic excellence is vital in acheiving the projects goals and will ensure LLM and the rest of the project group not only make a large postive societal impact, but will significantly advance LLM and each member of the research group's academic careers.
+
+############################## SUPPLEMENTARY MATERIALS ##############################
+
+SUPPLEMENTARY DOCUMENT 1.
+
+Description: This document is the text provided on the public website the Australian Government setup to provide information to citizens to inform their inputs.
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 1. START --------------------------------
+
+|issues|
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 1. END --------------------------------
+
+SUPPLEMENTARY DOCUMENT 2.
+
+Description: This document is a guidance note. It outlines in more detail the issues the Australian Government were trying to answer and understand as part of the consultation process.
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 2. START --------------------------------
+
+|guidance_note|
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 2. END --------------------------------
+
+SUPPLEMENTARY DOCUMENT 3.
+
+Description: This document is a fact sheet provided by the Australian Government. It provides a short explanation of some of the key elements of the proposed law changes and the issues they want input on.
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 3. START --------------------------------
+
+|fact_sheet|
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 3. END --------------------------------
+
+############################## SUPPLEMENTARY MATERIALS END ##############################
