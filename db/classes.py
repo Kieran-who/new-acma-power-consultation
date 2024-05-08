@@ -30,13 +30,7 @@ weav_classes = {
                     data_type=wvc.config.DataType.TEXT,
                     description="Does the responder support the consultation",
                     skip_vectorization=True,
-                ),
-                 wvc.config.Property(
-                    name="motivation",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "Top 3 motivations for the submission.",
-                    skip_vectorization=True,
-                 ),
+                ),                 
                  wvc.config.Property(
                     name="motivations",
                     data_type=wvc.config.DataType.TEXT_ARRAY,
@@ -62,9 +56,27 @@ weav_classes = {
                     skip_vectorization=True,
                  ),
                  wvc.config.Property(
+                    name="changes",
+                    data_type=wvc.config.DataType.TEXT,
+                    description= "Changes the submitter would like to see in the proposed laws.",
+                    skip_vectorization=True,
+                 ),
+                 wvc.config.Property(
                     name="file_name",
                     data_type=wvc.config.DataType.TEXT,
                     description= "The name of the submission file",
+                    skip_vectorization=True,
+                 ),                 
+                 wvc.config.Property(
+                    name="definitions",
+                    data_type=wvc.config.DataType.TEXT,
+                    description= "thoughts on definitions",
+                    skip_vectorization=True,
+                 ),
+                 wvc.config.Property(
+                    name="questions",
+                    data_type=wvc.config.DataType.TEXT,
+                    description= "The responses to specific questions for type.",
                     skip_vectorization=True,
                  )
             ]

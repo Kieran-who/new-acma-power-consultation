@@ -1,0 +1,21 @@
+{
+  "type": "function",
+  "function": {
+    "name": "submission_eval",
+    "description": "This function is used to evaluate the below submission to the consultation. This submission is from a news media organisation. Each parameter property is a question that you must respond to after carefully reading the description.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "regulating_news": {
+          "type": "string",
+          "description": "Does the submission explicitly provide for any circumstances under which professional news content is subject to regulation under the proposed changes? If so, please provide a brief summary of the comment, and the reasoning behind the submitter's belief. If no comment on this aspect, return 'No comment'."
+        },
+        "republished_content": {
+          "type": "string",
+          "description": "Does the submission explicitly comment on whether content published by news media organisations be excluded when republished on other platforms? If so, please provide a brief summary of the comment, and the reasoning behind the submitter's belief. If no comment on this aspect, return 'No comment'."
+        }
+      },
+      "required": ["regulating_news", "republished_content"]
+    }
+  }
+}

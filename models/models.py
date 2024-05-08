@@ -3,7 +3,7 @@ from typing import Optional, Union, List
 
 class FilterItem(BaseModel):
     property: str
-    value: Union[str, int, bool]
+    value: Union[str, int, bool, List[str]]
     condition: str
 
 

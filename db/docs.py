@@ -1,11 +1,12 @@
 from .db_instance import DBClient
 from models.models import FilterItem
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional, Dict
 import weaviate.classes as wvc
 import pandas as pd
 from az_client import get_vector
 from io import BytesIO
+import json
 
 class Document(BaseModel):
     author: str
@@ -17,6 +18,8 @@ class Document(BaseModel):
     perceived_impact: str
     regulator_trust: str
     file_name: str
+    definitions: str
+    questions: Optional[Dict]
 
 class DocumentManager:
     def __init__(self):
@@ -49,17 +52,8 @@ class DocumentManager:
         docs = []
         for obj in result.objects:            
             doc = obj.properties
-            if 'motivation' in doc:
-                fixed_motivation = []
-                motivations = doc["motivation"].split('. ')
-                for motivation in motivations:
-                    mot_split = motivation.strip().split('\n')
-                    for mot in mot_split:                    
-                        if len(mot) > 3:
-                            fixed_motivation.append(mot)                
-                doc['motivations'] = fixed_motivation
-                doc.pop('motivation', None)
-                self.update_doc(obj.uuid, doc)
+            if 'questions' in doc:
+                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs
@@ -80,6 +74,10 @@ class DocumentManager:
                 current_filter = wvc.query.Filter.by_property(property_name).equal(value)
             elif condition == "less_than":
                 current_filter = wvc.query.Filter.by_property(property_name).less_than(value)
+            elif condition == 'contains_any':
+                current_filter = wvc.query.Filter.by_property(property_name).contains_any(value)
+            elif condition == 'not_equal':
+                current_filter = wvc.query.Filter.by_property(property_name).not_equal(value)    
             
             # Combine the filter with the previous ones
             if combined_filter is None:
@@ -105,16 +103,8 @@ class DocumentManager:
         docs = []
         for obj in result.objects:
             doc = obj.properties
-            if 'motivation' in doc:
-                fixed_motivation = []
-                motivations = doc["motivation"].split('. ')
-                for motivation in motivations:
-                    mot_split = motivation.strip().split('\n')
-                    for mot in mot_split:                    
-                        if len(mot) > 3:
-                            fixed_motivation.append(mot)                
-                doc['motivations'] = fixed_motivation                
-                self.update_doc(obj.uuid, doc)
+            if 'questions' in doc:
+                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs 
@@ -127,17 +117,8 @@ class DocumentManager:
         docs = []
         for obj in result.objects:
             doc = obj.properties
-            if 'motivation' in doc:
-                fixed_motivation = []
-                motivations = doc["motivation"].split('. ')
-                for motivation in motivations:
-                    mot_split = motivation.strip().split('\n')
-                    for mot in mot_split:                    
-                        if len(mot) > 3:
-                            fixed_motivation.append(mot)                
-                doc['motivations'] = fixed_motivation
-                doc.pop('motivation', None)
-                self.update_doc(obj.uuid, doc)
+            if 'questions' in doc:
+                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs
@@ -178,7 +159,12 @@ class DocumentManager:
         
     def export_excel(self, filter_objects, search=None):
         self.init_client()
-        docs = self.search_docs_filtered(filter_objects, search)
+        if filter_objects and len(filter_objects) > 0:
+            docs = self.search_docs_filtered(filter_objects, search)
+        elif search:
+            docs = self.search_docs(search)
+        else:
+            docs = self.get_all_docs()
         # Convert docs to a pandas DataFrame
         df = pd.DataFrame(docs)
         

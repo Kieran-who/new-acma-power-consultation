@@ -14,7 +14,7 @@ async def get_meta():
 @router.get("/{file_path:path}")
 async def root(file_path: str):
     if file_path:
-            base_dir = Path("./static/submissions")
+            base_dir = Path("./static")
             # Construct the full path to the file
             file_location = base_dir / file_path
             return FileResponse(f'{file_location}')

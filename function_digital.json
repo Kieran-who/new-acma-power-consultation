@@ -1,0 +1,44 @@
+{
+  "type": "function",
+  "function": {
+    "name": "submission_eval",
+    "description": "This function is used to evaluate the below submission to the consultation. This submission is from a civil society organisation or academic. Each parameter property is a question that you must respond to after carefully reading the description.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "existing_codes": {
+          "type": "string",
+          "description": "What does the submitter think of the existing industry code? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "mandatory_code": {
+          "type": "string",
+          "description": "Does the submitter provide a view on the proposal to replace the voluntary industry code with a mandatory code? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "ACMA_standard_powers": {
+          "type": "string",
+          "description": "Does the submitter provide a viewpoint on the proposal for ACMA being given the power to make a standard (a formal regulatory standard) on misinformation or disinformation? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "excluded_services": {
+          "type": "string",
+          "description": "Does the submitter make any comments on whether there should be additional or fewer services included in the set of excluded services? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "reporting_requirements": {
+          "type": "string",
+          "description": "What is the submitter’s view, if any, on the requirements for reporting and record keeping and publication of information obtained using these powers? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "penalties": {
+          "type": "string",
+          "description": "Does the submitter provide a view on the penalties outlined in the proposed changes? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        }
+      },
+      "required": [
+        "existing_codes",
+        "mandatory_code",
+        "ACMA_standard_powers",
+        "excluded_services",
+        "reporting_requirements",
+        "penalties"
+      ]
+    }
+  }
+}

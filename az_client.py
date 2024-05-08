@@ -32,7 +32,7 @@ def get_vector(text):
                 continue
             else:
                 # if exception persists even after 10 attempts
-                raise
+                raise e
 
 # Parses the JSON from a function call, if there is an error in JSON parsing, recalls the LLM with the fix json function to get a valid json response.
 def parse_JSON(json_str: str) -> dict:        
@@ -95,6 +95,5 @@ def call_ai(prompt: str, function: dict) -> dict:
                     )
         json_res = parse_JSON(response.choices[0].message.tool_calls[0].function.arguments)        
         return json_res
-    except Exception as e:
-        print(e)
+    except Exception as e:        
         raise e

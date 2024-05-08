@@ -151,7 +151,7 @@
               id="filter-select-substantive"
               name="filter-select-substantive"
             >
-              <option value="all" selected>All</option>
+              <option value="All" selected>All</option>
               <option value="True">True</option>
               <option value="False">False</option>
             </select>
@@ -167,7 +167,6 @@
               <option value="unsure">Unsure</option>
             </select>
           </div>
-          <div class="checkbox"></div>
           <div class="checkbox">
             <label for="checkbox3" style="margin-right: 3px">Filter by:</label>
             <select id="filter-select-responder" name="filter-select-responder">
@@ -181,12 +180,33 @@
               <option value="Other">Other</option>
             </select>
           </div>
+          <div class="checkbox">
+            <label for="checkbox4" style="margin-right: 3px">Motivation:</label>
+            <select
+              id="filter-select-motivation"
+              name="filter-select-motivation"
+            ></select>
+          </div>
+          <div class="checkbox">
+            <!-- checkbox with label -->
+            <div class="checkbox">
+              <label for="checkbox-exc" style="padding-right: 3px"
+                >Exclude anonymous:</label
+              >
+              <input type="checkbox" id="checkbox-exc" name="checkbox-exc" />
+            </div>
+          </div>
           <button
             onclick="refineSearch()"
             style="cursor: pointer; color: #007bff"
           >
             Refine
           </button>
+          <i
+            class="bx bx-reset"
+            onclick="fetchDataAndRender(null)"
+            style="font-size: 28px; cursor: pointer; color: #007bff"
+          ></i>
         </div>
         <!-- toggle graph -->
         <div style="display: flex">
@@ -197,13 +217,12 @@
             style="font-size: 28px; cursor: pointer; color: #007bff"
           ></i>
           <!-- Export to excel -->
-          <i
-            class="bx bx-spreadsheet"
-            id="export-to-excel"
+          <img
+            src="/img/excel.png"
+            alt=""
+            style="cursor: pointer; height: 24px"
             onclick="exportToExcel()"
-            style="font-size: 28px; cursor: pointer; color: #007bff"
-            tooltip="Export to Excel"
-          ></i>
+          />
           <!-- Search input bar -->
           <input
             id="search-bar"
@@ -212,6 +231,7 @@
             style="
               display: none;
               margin-right: 10px;
+              margin-left: 10px;
               padding: 5px;
               border-radius: 5px;
               border: 1px solid #007bff;
@@ -365,16 +385,16 @@
         document.getElementById('data-container').style.display = 'none';
         container.style.display = 'flex';
         let innerCurrent = `<i class="bx bx-map" id="graph-toggle" onclick="toggleGraph()" style="font-size: 28px; cursor: pointer; color: rgb(0, 123, 255); display: none;"></i>
-        <!-- Search input bar -->
-        <input id="search-bar" type="text" placeholder="Search..." style="
-            display: none;
-            margin-right: 10px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #007bff;
-          ">
-        <!-- Search icon -->
-        <i class="bx bx-search" onclick="toggleSearchBarAndSearch()" style="font-size: 28px; cursor: pointer; color: #007bff"></i>`;
+          <!-- Search input bar -->
+          <input id="search-bar" type="text" placeholder="Search..." style="
+              display: none;
+              margin-right: 10px;
+              padding: 5px;
+              border-radius: 5px;
+              border: 1px solid #007bff;
+            ">
+          <!-- Search icon -->
+          <i class="bx bx-search" onclick="toggleSearchBarAndSearch()" style="font-size: 28px; cursor: pointer; color: #007bff"></i>`;
         document.getElementById(
           'header'
         ).innerHTML = `<i class='bx bxs-book-add' style="font-size: 28px; cursor: pointer; color: #007bff" onclick="markItemRead('${doc_id}')"></i>${innerCurrent}`;
@@ -392,6 +412,79 @@
         ).innerHTML = `Total Documents: ${count}`;
       }
 
+      // reusable function to get filters
+      function getFilters() {
+        const responder = document.getElementById(
+          'filter-select-responder'
+        ).value;
+        const support = document.getElementById('filter-select').value;
+        const substantive = document.getElementById(
+          'filter-select-substantive'
+        ).value;
+        const motivation = document.getElementById(
+          'filter-select-motivation'
+        ).value;
+        const excludeAnon = document.getElementById('checkbox-exc').checked;
+        let filters = [];
+        if (substantive === 'True') {
+          filters.push({
+            property: 'substantive_submission',
+            value: true,
+            condition: 'equal',
+          });
+        }
+        if (substantive === 'False') {
+          filters.push({
+            property: 'substantive_submission',
+            value: false,
+            condition: 'equal',
+          });
+        }
+        if (responder !== 'all') {
+          filters.push({
+            property: 'responder_category',
+            value: responder,
+            condition: 'equal',
+          });
+        }
+        if (support !== 'all') {
+          filters.push({
+            property: 'support',
+            value: support,
+            condition: 'equal',
+          });
+        }
+        if (motivation !== 'all') {
+          filters.push({
+            property: 'motivations',
+            value: [motivation],
+            condition: 'contains_any',
+          });
+        }
+        if (excludeAnon) {
+          filters.push({
+            property: 'author',
+            value: 'anonymous',
+            condition: 'not_equal',
+          });
+        }
+        return filters;
+      }
+
+      function displayQuestions(item) {
+        if (item === 'N/A' || !item) {
+          return item;
+        }
+        let keyValuePairs = '';
+        for (const [key, value] of Object.entries(item)) {
+          keyValuePairs += `<p><strong>${key.replace(
+            /_/g,
+            ' '
+          )}:</strong> ${value}</p>`;
+        }
+
+        return keyValuePairs;
+      }
       // Function to list documents
       async function fetchDataAndRender(searchString, filters) {
         document.getElementById('myChart').style.display = 'none';
@@ -400,7 +493,7 @@
         fetchBody['search'] =
           searchString && searchString !== undefined ? searchString : null;
         fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
-        fetchBody['excel'] = false;
+        fetchBody['excel'] = null;
 
         const res = await fetch(`/api/docs`, {
           method: 'post',
@@ -419,48 +512,92 @@
         // Create the table and its header
         const table = document.createElement('table');
         table.innerHTML = `
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Substantive Submission</th>
-                <th>Responder Category</th>
-                <th>Support</th>
-                <th>Motivation</th>
-                <th>Regulation</th>
-                <th>Perceived Impact</th>
-                <th>Regulator Trust</th>
-                <th>Author</th>
-                <th>File</th>
-            </tr>
-        </thead>
-    `;
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Substantive Submission</th>
+                  <th>Responder Category</th>
+                  <th>Support</th>
+                  <th>Motivation</th>
+                  <th>Changes</th>
+                  <th>Regulation</th>
+                  <th>Perceived Impact</th>
+                  <th>Regulator Trust</th>                  
+                  <th>Definitions</th>
+                  <th>Specific Questions</th>
+                  <th>Author</th>
+                  <th>File</th>
+              </tr>
+          </thead>
+      `;
         const tbody = document.createElement('tbody');
 
         // Assuming each item in 'data' represents a row in the table
         data.forEach((item) => {
+          if (!item.motivations) {
+            item.motivations = [];
+          }
+          if (!item.questions) {
+            item.questions = 'N/A';
+          }
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${item.file_name.split('-')[0]}</td>
-            <td>${item.substantive_submission}</td>
-            <td>${item.responder_category}</td>
-            <td>${item.support}</td>
-            <td><ol>${item.motivations
-              .map((i) => `<li>${i}</li>`)
-              .join('')}</ol></td>
-            <td>${item.regulation}</td>
-            <td>${item.perceived_impact}</td>
-            <td>${item.regulator_trust}</td>
-            <td>${item.author}</td>
-            <td><a href="/${item.file_name}.pdf" target="_blank">${
+              <td>${item.file_name.split('-')[0]}</td>
+              <td>${item.substantive_submission}</td>
+              <td>${item.responder_category}</td>
+              <td>${item.support}</td>
+              <td><ol>${item.motivations
+                .map((i) => `<li>${i}</li>`)
+                .join('')}</ol></td>
+              <td>${item.regulation}</td>
+              <td>${item.changes}</td>
+              <td>${item.perceived_impact}</td>
+              <td>${item.regulator_trust}</td>              
+              <td>${item.definitions}</td>
+              <td>${displayQuestions(item.questions)}</td>
+              <td>${item.author}</td>
+              <td><a href="submissions/${item.file_name}.pdf" target="_blank">${
             item.file_name
           }</a></td>
-        `;
+          `;
           tbody.appendChild(row);
         });
 
         table.appendChild(tbody);
         container.appendChild(table);
         container.style.display = 'block';
+        const motivations = [];
+        const motivationCounts = {}; // Object to store motivation counts
+
+        for (let i = 0; i < data.length; i++) {
+          data[i].motivations.forEach((motivation) => {
+            if (!motivations.includes(motivation)) {
+              if (motivation.includes(',')) {
+                for (let mot of motivation.split(',')) {
+                  if (!motivations.includes(mot)) {
+                    motivations.push(mot.trim());
+                    motivationCounts[mot] = 1;
+                  } else {
+                    motivationCounts[mot]++;
+                  }
+                }
+              } else {
+                motivations.push(motivation);
+                motivationCounts[motivation] = 1; // Initialize count to 1
+              }
+            } else {
+              motivationCounts[motivation]++; // Increment count if motivation already exists
+            }
+          });
+        }
+        const motivationSelect = document.getElementById(
+          'filter-select-motivation'
+        );
+        motivationSelect.innerHTML =
+          '<option value="all" selected>All</option>';
+        motivations.forEach((motivation) => {
+          motivationSelect.innerHTML += `<option value="${motivation}">${motivation} (${motivationCounts[motivation]})</option>`;
+        });
       }
 
       // Function to toggle the search bar
@@ -489,87 +626,14 @@
       function refineSearch() {
         const searchBar = document.getElementById('search-bar');
         const searchTerm = searchBar.value ? searchBar.value : null;
-        const responder = document.getElementById(
-          'filter-select-responder'
-        ).value;
-        const support = document.getElementById('filter-select').value;
-        const substantive = document.getElementById(
-          'filter-select-substantive'
-        ).checked;
-        let filters = [];
-        if (substantive !== 'all') {
-          if (substantive === 'True') {
-            filters.push({
-              property: 'substantive_submission',
-              value: true,
-              condition: 'equal',
-            });
-          } else {
-            filters.push({
-              property: 'substantive_submission',
-              value: false,
-              condition: 'equal',
-            });
-          }
-        }
-        if (responder !== 'all') {
-          filters.push({
-            property: 'responder_category',
-            value: responder,
-            condition: 'equal',
-          });
-        }
-        if (support !== 'all') {
-          filters.push({
-            property: 'support',
-            value: support,
-            condition: 'equal',
-          });
-        }
+        const filters = getFilters();
         fetchDataAndRender(searchTerm, filters);
       }
 
       function exportToExcel() {
         const searchBar = document.getElementById('search-bar');
         const searchTerm = searchBar.value ? searchBar.value : null;
-        const responder = document.getElementById(
-          'filter-select-responder'
-        ).value;
-        const support = document.getElementById('filter-select').value;
-        const substantive = document.getElementById(
-          'filter-select-substantive'
-        ).checked;
-        let filters = [];
-        if (substantive !== 'all') {
-          if (substantive === 'True') {
-            filters.push({
-              property: 'substantive_submission',
-              value: true,
-              condition: 'equal',
-            });
-          } else {
-            filters.push({
-              property: 'substantive_submission',
-              value: false,
-              condition: 'equal',
-            });
-          }
-        }
-        if (responder !== 'all') {
-          filters.push({
-            property: 'responder_category',
-            value: responder,
-            condition: 'equal',
-          });
-        }
-        if (support !== 'all') {
-          filters.push({
-            property: 'support',
-            value: support,
-            condition: 'equal',
-          });
-        }
-
+        const filters = getFilters();
         const fetchBody = {};
         fetchBody['search'] = searchTerm ? searchTerm : null;
         fetchBody['filters'] = filters && filters.length > 0 ? filters : null;

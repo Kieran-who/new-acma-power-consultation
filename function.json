@@ -12,7 +12,7 @@
         },
         "responder_category": {
           "type": "string",
-          "description": "One aspect of the research is looking how different categories of responders respond to the consultation. Based on the response (especially the name of the responder - e.g. if it is a company or group), please select the category that best describes the responder. Options are: 1. Individual 2. Political (e.g. Government agencie or politician or political part) 3. Digital Platform (e.g. Meta, Microsoft, Google, etc.) 4. Civil Society (e.g. NGO, advocacy group, etc.) 5. Academic 6. News (e.g. a news company such as News Corp, ABC or Nine News, or a industry association representing news organisations such as Australian Press Council or Commerical Radio Australia or FreeTV) 7. Other (please specify). Only return the category that best describes the responder. E.g. for a submission from the UTS Centre for Media Transition, you would return: 'Academic'."
+          "description": "One aspect of the research is looking how different categories of responders respond to the consultation. Based on the response (especially the name of the responder - e.g. if it is a company or group), please select the category that best describes the responder. Options are: 1. Individual 2. Political (e.g. Government agency or politician or political part) 3. Digital Platform (e.g. Meta, Microsoft, Google, etc.) 4. Civil Society (e.g. NGO, advocacy group, etc.) 5. Academic 6. News (e.g. a news company such as News Corp, ABC or Nine News, or a industry association representing news organisations such as Australian Press Council or Commerical Radio Australia or FreeTV) 7. Other (please specify). Only return the category that best describes the responder. E.g. for a submission from the UTS Centre for Media Transition, you would return: 'Academic'."
         },
         "support": {
           "type": "string",
@@ -20,22 +20,30 @@
         },
         "motivations": {
           "type": "array",
-          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). E.g.\n\n['Privacy', 'Freedom of speech', 'Complexity']\n\nIf only one or two key motivations, return only these one or two.",
+          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). If only one or two key motivations, return only these one or two. Below are some examples of motivations, if any of these fit, please use, otherwise provide new motivations:\n\n|motivations|",
           "items": {
             "type": "string"
           }
         },
+        "changes": {
+          "type": "string",
+          "description": "Does this submission provide suggestions on what changes need to be made in the Bill? If so, please provide a brief summary of the suggested changes. If no comment on this aspect, return 'No comment'."
+        },
         "regulation": {
           "type": "string",
-          "description": "Does this submission make any comment on the form of regulation provided by the Bill (e.g. does the submission comment on the practicality, or desirability of codes of practice, e.g. co-regulation, or the specific merits of the use of legislation in regulating misinformation or disinformation, or do that make specific comments as to the preferability of no regulation)? If so, please provide a brief summary of the comment, and there reasoning behind their belief. If no comment on this aspect, return 'No comment'."
+          "description": "Does this submission make any comment on the form of regulation provided by the Bill. For example, does the submission comment on the practicality, or desirability of codes of practice or industry standards or legislation, or the specific merits of the use of legislation in regulating misinformation or disinformation? If co-regulation is mention highlight this. This question is only interested in the submission's view on the form of regulation and NOT whether or not the issue should be regulated or what the impacts of regulation may be. Do not summarise the impacts the submission may believe regulation in general will have, here we are only interested in specific comments as to the form of regulation. If the submission makes explicit comments as to the form of regulation, please provide a brief summary of the comment, and the reasoning behind their belief. If no comment on this aspect, return 'No comment'."
         },
         "perceived_impact": {
           "type": "string",
-          "description": "How does the submitter perceive the impact of the proposed laws on combating misinformation and disinformation? What impact do they foresee on the broader digital ecosystem, including social media platforms, content creators, and the general public? If no comment on this aspect, return 'No comment'."
+          "description": "How does the submitter perceive the impact of the proposed laws on combating misinformation and disinformation? Highlight briefly what impact they foresee on the broader digital ecosystem, including social media platforms, content creators, and the general public? If no comment on this aspect, return 'No comment'."
         },
         "regulator_trust": {
           "type": "string",
           "description": "Does the submission express trust or skepticism towards the ACMA's ability to impartially and effectively use the new powers? Are there any suggestions for ensuring accountability and oversight? If no comment on this aspect, return 'No comment'."
+        },
+        "definitions": {
+          "type": "string",
+          "description": "What does the submitter think about the definitions of misinformation, disinformation and serious harm? If the submitter makes no comment on this aspect, return 'No comment'."
         }
       },
       "required": [
@@ -43,9 +51,11 @@
         "responder_category",
         "support",
         "motivation",
+        "changes",
         "regulation",
         "perceived_impact",
-        "regulator_trust"
+        "regulator_trust",
+        "definitions"
       ]
     }
   }
