@@ -1,9 +1,17 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union, List
+
+class FilterItem(BaseModel):
+    property: str
+    value: Union[str, int, bool]
+    condition: str
+
 
 class ContentRequest(BaseModel):
     path: str
-    doc_id: str    
+    doc_id: str
 
 class DocRetrieve(BaseModel):    
     search: Optional[str]
+    filters: Optional[List[FilterItem]]
+    excel: Optional[bool]

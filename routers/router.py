@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from models.models import ContentRequest, DocRetrieve
 from db.docs import DocumentManager
 from pathlib import Path
@@ -22,13 +22,24 @@ async def root(file_path: str):
         return FileResponse('./static/index.html')
 
 @router.post("/api/docs")
-async def get(request: DocRetrieve):    
+async def get(request: DocRetrieve):
     dm = DocumentManager()
     search = request.search
-    if search:
+    filters = request.filters
+    excel_export = request.excel
+    if excel_export:
+        excel_file = dm.export_excel(filters, search)
+        headers = {
+            'Content-Disposition': 'attachment; filename="data.xlsx"'
+        }
+        return StreamingResponse(excel_file, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers=headers)
+    if filters:
+        return dm.search_docs_filtered(filters, search)
+    if search and not filters:
         return dm.search_docs(search)
     else:
-        return dm.get_all_docs(limit=100)
+        return dm.get_all_docs(limit=2500)
+
     
 
 @router.post("/api/content")

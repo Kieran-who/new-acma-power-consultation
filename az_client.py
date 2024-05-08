@@ -97,4 +97,4 @@ def call_ai(prompt: str, function: dict) -> dict:
         return json_res
     except Exception as e:
         print(e)
-        return "\n***\n"
+        raise e

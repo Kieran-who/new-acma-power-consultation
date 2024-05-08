@@ -14,9 +14,6 @@
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
-        margin: 0;
-        max-width: 100vw;
-        max-height: 100vh;
       }
       .item {
         background-color: #f0f0f00d;
@@ -58,6 +55,19 @@
       img {
         max-width: 100%;
         height: auto;
+      }
+      .filters {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .checkbox {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 10px;
       }
       table {
         border-collapse: collapse;
@@ -116,8 +126,7 @@
         justify-content: center;
         align-items: center;
         font-family: Arial, Helvetica, sans-serif;
-        padding-bottom: 3%;
-        max-width: 100%;
+        max-width: 100vw;
       "
     >
       <!-- header -->
@@ -129,13 +138,56 @@
           justify-content: space-between;
           padding-top: 15px;
           padding-bottom: 15px;
-          padding-left: 3%;
-          padding-right: 3%;
           max-height: 40px;
           width: 100%;
         "
       >
         <p id="count"></p>
+        <div class="filters">
+          <div class="checkbox">
+            <label for="checkbox1" style="margin-right: 3px">Substantive:</label
+            ><br />
+            <select
+              id="filter-select-substantive"
+              name="filter-select-substantive"
+            >
+              <option value="all" selected>All</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div class="checkbox">
+            <label for="checkbox2" style="margin-right: 3px">Support:</label
+            ><br />
+            <select id="filter-select" name="filter-select">
+              <option value="all" selected>All</option>
+              <option value="oppose">Oppose</option>
+              <option value="support">Support</option>
+              <option value="neutral">Neutral</option>
+              <option value="unsure">Unsure</option>
+            </select>
+          </div>
+          <div class="checkbox"></div>
+          <div class="checkbox">
+            <label for="checkbox3" style="margin-right: 3px">Filter by:</label>
+            <select id="filter-select-responder" name="filter-select-responder">
+              <option value="all" selected>All</option>
+              <option value="Individual">Individual</option>
+              <option value="Political">Political</option>
+              <option value="Digital Platform">Digital Platform</option>
+              <option value="Civil Society">Civil Society</option>
+              <option value="Academic">Academic</option>
+              <option value="News">News</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <button
+            onclick="refineSearch()"
+            style="cursor: pointer; color: #007bff"
+          >
+            Refine
+          </button>
+        </div>
         <!-- toggle graph -->
         <div style="display: flex">
           <i
@@ -143,6 +195,14 @@
             id="graph-toggle"
             onclick="toggleGraph()"
             style="font-size: 28px; cursor: pointer; color: #007bff"
+          ></i>
+          <!-- Export to excel -->
+          <i
+            class="bx bx-spreadsheet"
+            id="export-to-excel"
+            onclick="exportToExcel()"
+            style="font-size: 28px; cursor: pointer; color: #007bff"
+            tooltip="Export to Excel"
           ></i>
           <!-- Search input bar -->
           <input
@@ -333,12 +393,14 @@
       }
 
       // Function to list documents
-      async function fetchDataAndRender(searchString) {
+      async function fetchDataAndRender(searchString, filters) {
         document.getElementById('myChart').style.display = 'none';
         document.getElementById('graph-toggle').style.display = 'none';
         let fetchBody = {};
         fetchBody['search'] =
           searchString && searchString !== undefined ? searchString : null;
+        fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
+        fetchBody['excel'] = false;
 
         const res = await fetch(`/api/docs`, {
           method: 'post',
@@ -348,6 +410,11 @@
         const data = await res.json();
         const container = document.getElementById('data-container');
         container.innerHTML = '';
+
+        // display count
+        document.getElementById(
+          'count'
+        ).innerHTML = `Total Documents: ${data.length}`;
 
         // Create the table and its header
         const table = document.createElement('table');
@@ -417,6 +484,111 @@
         container.style.display = 'none';
         // Call fetchDataAndRender with the search string
         fetchDataAndRender(searchInput);
+      }
+
+      function refineSearch() {
+        const searchBar = document.getElementById('search-bar');
+        const searchTerm = searchBar.value ? searchBar.value : null;
+        const responder = document.getElementById(
+          'filter-select-responder'
+        ).value;
+        const support = document.getElementById('filter-select').value;
+        const substantive = document.getElementById(
+          'filter-select-substantive'
+        ).checked;
+        let filters = [];
+        if (substantive !== 'all') {
+          if (substantive === 'True') {
+            filters.push({
+              property: 'substantive_submission',
+              value: true,
+              condition: 'equal',
+            });
+          } else {
+            filters.push({
+              property: 'substantive_submission',
+              value: false,
+              condition: 'equal',
+            });
+          }
+        }
+        if (responder !== 'all') {
+          filters.push({
+            property: 'responder_category',
+            value: responder,
+            condition: 'equal',
+          });
+        }
+        if (support !== 'all') {
+          filters.push({
+            property: 'support',
+            value: support,
+            condition: 'equal',
+          });
+        }
+        fetchDataAndRender(searchTerm, filters);
+      }
+
+      function exportToExcel() {
+        const searchBar = document.getElementById('search-bar');
+        const searchTerm = searchBar.value ? searchBar.value : null;
+        const responder = document.getElementById(
+          'filter-select-responder'
+        ).value;
+        const support = document.getElementById('filter-select').value;
+        const substantive = document.getElementById(
+          'filter-select-substantive'
+        ).checked;
+        let filters = [];
+        if (substantive !== 'all') {
+          if (substantive === 'True') {
+            filters.push({
+              property: 'substantive_submission',
+              value: true,
+              condition: 'equal',
+            });
+          } else {
+            filters.push({
+              property: 'substantive_submission',
+              value: false,
+              condition: 'equal',
+            });
+          }
+        }
+        if (responder !== 'all') {
+          filters.push({
+            property: 'responder_category',
+            value: responder,
+            condition: 'equal',
+          });
+        }
+        if (support !== 'all') {
+          filters.push({
+            property: 'support',
+            value: support,
+            condition: 'equal',
+          });
+        }
+
+        const fetchBody = {};
+        fetchBody['search'] = searchTerm ? searchTerm : null;
+        fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
+        fetchBody['excel'] = true;
+        fetch(`/api/docs`, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fetchBody),
+        })
+          .then((response) => response.blob())
+          .then((blob) => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          });
       }
       getMeta();
       fetchDataAndRender(null);
