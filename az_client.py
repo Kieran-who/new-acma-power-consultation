@@ -10,13 +10,15 @@ azure_client = AzureOpenAI(
     azure_endpoint=AZURE_OPENAI_BASE_URL
 )
 
-def correct_length(text: str) -> str:
-    encoding = tiktoken.get_encoding("cl100k_base")
+def correct_length(text: str, max_tokens = 8190, model = 'GPT-4-T') -> str:
+    if model == "gpt-4o":
+        encoding = tiktoken.encoding_for_model("gpt-4o")
+    else:
+        encoding = tiktoken.get_encoding("cl100k_base")
     tokens = encoding.encode(text)
-    tokens = tokens[:8190]  # Truncate the tokens to the max_tokens length
-    vector_safe = encoding.decode(tokens)   
+    tokens = tokens[:max_tokens] # Truncate the tokens to the max_tokens length
+    vector_safe = encoding.decode(tokens)
     return vector_safe
-
 
 def get_vector(text):
     retries = 10

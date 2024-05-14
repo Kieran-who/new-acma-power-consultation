@@ -12,7 +12,7 @@
         },
         "responder_category": {
           "type": "string",
-          "description": "One aspect of the research is looking how different categories of responders respond to the consultation. Based on the response (especially the name of the responder - e.g. if it is a company or group), please select the category that best describes the responder. Options are: 1. Individual 2. Political (e.g. Government agency or politician or political part) 3. Digital Platform (e.g. Meta, Microsoft, Google, etc.) 4. Civil Society (e.g. NGO, advocacy group, etc.) 5. Academic 6. News (e.g. a news company such as News Corp, ABC or Nine News, or a industry association representing news organisations such as Australian Press Council or Commerical Radio Australia or FreeTV) 7. Other (please specify). Only return the category that best describes the responder. E.g. for a submission from the UTS Centre for Media Transition, you would return: 'Academic'."
+          "description": "One aspect of the research is looking how different categories of responders respond to the consultation. Based on the response (especially the name of the responder - e.g. if it is a company or group), please select the category that best describes the responder. Options are: 1. Individual 2. Political (e.g. politician or political part) 3. Digital Platform (e.g. Meta, Microsoft, Google, etc.) 4. Civil Society (e.g. NGO, advocacy group, etc.) 5. Academic 6. News (e.g. a news company such as News Corp, ABC or Nine News, or a industry association representing news organisations such as Australian Press Council or Commerical Radio Australia or FreeTV) 7. Government (e.g. government agencies such as Victorian Electoral Commission or Australian Human Rights Commission) 8. Industry: An industry body that does not neatly fit within the predefined categories (e.g. while Commerical Radio Australia represents news broadcasters and as such fits within News, an industry body such as Communications Alliance, which represents communications providers such as a telcos and broadband companies would fit here) 9. Other (please specify). Only return the category that best describes the responder. E.g. for a submission from the UTS Centre for Media Transition, you would return: 'Academic'."
         },
         "support": {
           "type": "string",
@@ -20,7 +20,7 @@
         },
         "motivations": {
           "type": "array",
-          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). If only one or two key motivations, return only these one or two. Below are some examples of motivations, if any of these fit, please use, otherwise provide new motivations:\n\n|motivations|",
+          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). If only one or two key motivations, return only these one or two.",
           "items": {
             "type": "string"
           }
