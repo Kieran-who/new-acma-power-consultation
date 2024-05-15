@@ -8,7 +8,7 @@
       "properties": {
         "substantive_submission": {
           "type": "boolean",
-          "description": "Does the submission provide a substantive response to the consultation (True or False)? Substantive submissions are those that provide a detailed or well reasoned response to the consultation. Screenshots of memes or other pre-existing content are not considered substantive. Submissions relying on conspiracy theories are not considered substantive. A submission expressing purely personal opinion is not considered substantive. Consider the supplementary materials and determine if the submission answers substantively answers the issues, concerns and questions raised in the consultation."
+          "description": "Does the submission provide a substantive response to the consultation (True or False)? Substantive submissions are those that provide a detailed or well reasoned response to the consultation. Screenshots of memes or other pre-existing content are not considered substantive. Submissions relying on conspiracy theories are not considered substantive. A submission expressing purely personal opinio, without any supporting argument, is not considered substantive. Consider the supplementary materials and determine if the submission answers substantively answers the issues, concerns and questions raised in the consultation."
         },
         "responder_category": {
           "type": "string",
@@ -16,34 +16,37 @@
         },
         "support": {
           "type": "string",
-          "description": "Overall, considering the whole of the submission, does the submission support, oppose, or have a neutral stance towards the proposed laws? Make sure you truly understand the submissions position, some confusion may arise where the submission is supporting another submission, but this does not mean the submission is in support of the proposed changes. If you are unsure, such as in this situation, respond with 'unsure'. (return only one of the following options: 'support', 'oppose', 'neutral', 'unsure')"
+          "description": "Overall, considering the whole of the submission, does the submission support, oppose, or have a neutral stance towards the proposed laws? Make sure you truly understand the submission's position taking into account the whole document. Look for express statement's expressing support or opposition. If no express statements are present, weight up the arguments against and arguments in favour of the Bill and specific aspects of the proposed changes. Some confusion may arise where the submission states it is supporting another submission – this does not mean the submission is in support of the proposed changes. In these circumstances, if you are unsure (i.e. the submission is not clear and you do not have access to the submission being referred to), respond with 'unsure'. (return only one of the following options: 'support', 'oppose', 'neutral', 'unsure')."
         },
         "motivations": {
           "type": "array",
-          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each short and brief (under 5 words). If only one or two key motivations, return only these one or two.",
+          "description": "Number the top 3 motivations or concerns underpinning the submission's view point. Keep each motivation general, short and brief (under 5 words). If only one or two key motivations, return only these one or two.",
           "items": {
             "type": "string"
           }
         },
         "changes": {
-          "type": "string",
-          "description": "Does this submission provide suggestions on what changes need to be made in the Bill? If so, please provide a brief summary of the suggested changes. If no comment on this aspect, return 'No comment'."
+          "type": "array",
+          "description": "Does this submission provide suggestions on what changes need to be made in the Bill? If so, please list each suggested change with a very very brief summary (no more than a line in total), with the most important changes first. You do not need to describe each change in detail, just give a onelight statement of what the submitter requests to be changed. If no comment on this aspect, return 'No comment'.",
+          "items": {
+            "type": "string"
+          }
         },
         "regulation": {
           "type": "string",
-          "description": "Does this submission make any comment on the form of regulation provided by the Bill. For example, does the submission comment on the practicality, or desirability of codes of practice or industry standards or legislation, or the specific merits of the use of legislation in regulating misinformation or disinformation? If co-regulation is mention highlight this. This question is only interested in the submission's view on the form of regulation and NOT whether or not the issue should be regulated or what the impacts of regulation may be. Do not summarise the impacts the submission may believe regulation in general will have, here we are only interested in specific comments as to the form of regulation. If the submission makes explicit comments as to the form of regulation, please provide a brief summary of the comment, and the reasoning behind their belief. If no comment on this aspect, return 'No comment'."
+          "description": "Does this submission make any comment on the form of regulation provided by the Bill. For example, does the submission comment on the practicality, feasibility or merits of self-regulation, codes of practice, industry standards or legislation? If co-regulation or self-regulation is mentioned highlight this. This question is only interested in the submission's view on the FORM OF REGULATION and NOT whether or not the issue should be regulated or what the impacts of regulation may be. Do not summarise the impacts the submission may believe regulation in general will have, WE ARE ONLY interested in specific comments as to the form of regulation (e.g. self-regulation, quasi-regulation, co-regulation, industry codes of practice, industry-regulator collaboration, industry standards, Direct government regulation, etc.). If the submission makes explicit comments as to the form of regulation, please provide a brief summary of the comment, and the reasoning behind their belief. If no comment on this aspect, return 'No comment'."
         },
-        "perceived_impact": {
+        "perceived_societal_impact": {
           "type": "string",
-          "description": "How does the submitter perceive the impact of the proposed laws on combating misinformation and disinformation? Highlight briefly what impact they foresee on the broader digital ecosystem, including social media platforms, content creators, and the general public? If no comment on this aspect, return 'No comment'."
+          "description": "How does the submitter perceive the impact of the proposed laws on combating misinformation and disinformation and the broader digital ecosystem, including social media platforms, content creators, and the general public? Restrict your summary on this point purely to what impacts the submission has highlighted relating to combating misinformation and disinformation and the broader digital ecosystem, including social media platforms, content creators, and the general public. Do not include comments on feasibility or any other aspects covered by other questions. If no comment on this aspect, return 'No comment'."
         },
         "regulator_trust": {
           "type": "string",
-          "description": "Does the submission express trust or skepticism towards the ACMA's ability to impartially and effectively use the new powers? Are there any suggestions for ensuring accountability and oversight? If no comment on this aspect, return 'No comment'."
+          "description": "Does the submission express trust or skepticism towards the Australian Media and Communications Authority (ACMA)'s ability to impartially and effectively use the new powers? Are there any suggestions for ensuring accountability and oversight? Please only highlight express statements as to the ability of the ACMA to impartially and effectively use the new powers, or any suggestions for ensuring accountability and oversight of ACMA exercising its power. If no comment on this aspect, return 'No comment'."
         },
         "definitions": {
           "type": "string",
-          "description": "What does the submitter think about the definitions of misinformation, disinformation and serious harm? If the submitter makes no comment on this aspect, return 'No comment'."
+          "description": "What does the submitter think about the definitions of misinformation, disinformation and serious harm? Only consider comments on the definitions of 'misinformation', 'disinformation' and 'serious harm'. If the submitter makes no comment on the definitions of these specific terms, return 'No comment'."
         }
       },
       "required": [

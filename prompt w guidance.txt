@@ -22,12 +22,22 @@ Description: This document is the text provided on the public website the Austra
 
 SUPPLEMENTARY DOCUMENT 2.
 
-Description: This document is a fact sheet provided by the Australian Government. It provides a short explanation of some of the key elements of the proposed law changes and the issues they want input on.
+Description: This document is a guidance note. It outlines in more detail the issues the Australian Government were trying to answer and understand as part of the consultation process.
 
 -------------------------------- SUPPLEMENTARY DOCUMENT 2. START --------------------------------
 
-|fact_sheet|
+|guidance_note|
 
 -------------------------------- SUPPLEMENTARY DOCUMENT 2. END --------------------------------
+
+SUPPLEMENTARY DOCUMENT 3.
+
+Description: This document is a fact sheet provided by the Australian Government. It provides a short explanation of some of the key elements of the proposed law changes and the issues they want input on.
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 3. START --------------------------------
+
+|fact_sheet|
+
+-------------------------------- SUPPLEMENTARY DOCUMENT 3. END --------------------------------
 
 ############################## SUPPLEMENTARY MATERIALS END ##############################
