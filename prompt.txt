@@ -12,7 +12,7 @@ LLM is working on this task as part of a research group. LLM's role in carrying 
 
 SUPPLEMENTARY DOCUMENT 1.
 
-Description: This document is the text provided on the public website the Australian Government setup to provide information to citizens to inform their inputs.
+Description: This document is the text provided on the public website that the Australian Government set up to provide information to citizens to inform their submissions.
 
 -------------------------------- SUPPLEMENTARY DOCUMENT 1. START --------------------------------
 
@@ -22,7 +22,7 @@ Description: This document is the text provided on the public website the Austra
 
 SUPPLEMENTARY DOCUMENT 2.
 
-Description: This document is a fact sheet provided by the Australian Government. It provides a short explanation of some of the key elements of the proposed law changes and the issues they want input on.
+Description: This document is a fact sheet provided by the Australian Government. It briefly explains some of the key elements of the proposed law changes and the issues they want input on.
 
 -------------------------------- SUPPLEMENTARY DOCUMENT 2. START --------------------------------
 
