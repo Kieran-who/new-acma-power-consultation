@@ -1,16 +1,14 @@
 import time
-from openai import AzureOpenAI
-from config import AZURE_OPENAI_KEY, AZURE_OPENAI_BASE_URL, EMBED_MODEL
+from openai import OpenAI
 import json
 import tiktoken
+from config import OPENAI_KEY, TXT_MODEL, EMBEDDING_MODEL, DEFAULT_TXT_PARAMS
 
-azure_client = AzureOpenAI(
-    api_key=AZURE_OPENAI_KEY,
-    api_version="2024-02-15-preview",
-    azure_endpoint=AZURE_OPENAI_BASE_URL
+client = OpenAI(
+    api_key=OPENAI_KEY,        
 )
 
-def correct_length(text: str, max_tokens = 8190, model = 'GPT-4-T') -> str:
+def correct_length(text: str, max_tokens = 8190, model = 'gpt-4o' ) -> str:
     if model == "gpt-4o":
         encoding = tiktoken.encoding_for_model("gpt-4o")
     else:
@@ -25,15 +23,14 @@ def get_vector(text):
     safe_text = correct_length(text)
     for attempt in range(retries):
         try:            
-            embeddings = azure_client.embeddings.create(input = safe_text, model=EMBED_MODEL).data[0].embedding                                               
+            embeddings = client.embeddings.create(input = safe_text, model=EMBEDDING_MODEL).data[0].embedding                                               
             return embeddings        
         except Exception as e:
             print(f"Error: {e}")
-            if attempt < retries - 1:  # i is zero indexed
-                time.sleep(2 ** attempt)  # exponential backoff
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
                 continue
-            else:
-                # if exception persists even after 10 attempts
+            else:                
                 raise e
 
 # Parses the JSON from a function call, if there is an error in JSON parsing, recalls the LLM with the fix json function to get a valid json response.
@@ -71,30 +68,27 @@ def parse_JSON(json_str: str) -> dict:
         },
       },
     }]                
-        response = azure_client.chat.completions.create(
-                    model='gpt-4',
-                    messages=messages,                    
-                    max_tokens=4096,
-                    temperature=0,
-                    tools=tool_choices,
-                    tool_choice={ 'type': 'function', 'function': { 'name': 'fix_object' } },        
-                )        
+        additional_params = {
+          'messages': messages,
+          'tools': tool_choices,
+          'tool_choice':{ 'type': 'function', 'function': { 'name': 'fix_object' } }
+          }
+        params = {**DEFAULT_TXT_PARAMS, **additional_params} 
+        response = client.chat.completions.create(params)
                 
         second_test_json = response.choices[0].message.tool_calls[0].function.arguments 
                   
         to_return = json.loads(second_test_json)
         return json.loads(to_return['fixedJSON'])
 
-def call_ai(prompt: str, function: dict) -> dict:
-    message_arr = [{"role": "user", "content": prompt}]    
+def call_ai(message_arr: list, function: dict) -> dict:    
+    additional_params = {
+    'messages': message_arr,
+    'tools': [function]
+    }
+    params = {**DEFAULT_TXT_PARAMS, **additional_params} 
     try:                
-        response = azure_client.chat.completions.create(
-                        model='gpt-4',
-                        messages=message_arr,
-                        max_tokens=4096,
-                        temperature=0,
-                        tools=[function],
-                    )
+        response = client.chat.completions.create(**params)
         json_res = parse_JSON(response.choices[0].message.tool_calls[0].function.arguments)        
         return json_res
     except Exception as e:        

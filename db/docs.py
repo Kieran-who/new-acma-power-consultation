@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 import weaviate.classes as wvc
 import pandas as pd
-from az_client import get_vector
+from ai_client import get_vector
 from io import BytesIO
 import json
 
