@@ -4,6 +4,8 @@ db/data*
 
 data/*
 
+00Archive
+
 static/submissions*
 
 private.py

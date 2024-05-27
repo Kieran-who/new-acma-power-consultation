@@ -29,6 +29,26 @@
         "penalties": {
           "type": "string",
           "description": "Does the submitter provide a view on the penalties outlined in the proposed changes? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+        },
+        "included_and_excluded_services": {
+          "type": "object",
+          "description": "Does the submission comment on what is or is not included in the ‘excluded services’? This should not be inferred. If the submission does comment on this issue, provide a list of services that the submission believes should be included and a list of services that the submission does not believe should be included. Only included services in either list that the submission explicitly mentions. Your response should be a JSON object with the following structure: {“include”: [], “exclude”: []} where each empty array is where you list the services that should be included or excluded. If either list is empty, return an empty array. If the submitter does not make explicit comments on this aspect, return the JSON object with both arrays empty.",
+          "properties": {
+            "include": {
+              "type": "array",
+              "description": "Services the submission believes should be included in the ‘excluded services’.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "exclude": {
+              "type": "array",
+              "description": "Services the submission believes should not be included in the ‘excluded services’.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         }
       },
       "required": [
