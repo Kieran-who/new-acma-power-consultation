@@ -7,18 +7,31 @@
       "type": "object",
       "properties": {
         "regulating_news": {
-          "type": "string",
-          "description": "Does the submission comment on whether professional news content should be excluded or included under the proposed changes? If no comment on this issue, return ‘No comment’. If the submission does discuss this issue, return which of the following categories best describes the submission’s position. Possible positions:1. Professional news content should be excluded\n2. Professional news content should be included\n3. Other (please describe in one sentence or less)."
+          "type": "object",
+          "description": "Does the submission explicitly comment on whether professional news content should be excluded or included under the proposed changes? We are only interested specifically in professional news content. Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of professional news content. If no comment on this issue, return an empty object or nothing at all. If the submission does discuss this issue, return which of the following categories best describes the submission’s position. Possible positions:1. Professional news content should be excluded\n2. Professional news content should be included\n3. Other (please describe in one sentence or less). For the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, extracting the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}\n\nFor example, if a submission claims professional news content should be excluded, you would respond:\n\n{'position': 'Professional news content should be excluded', 'description': 'Detailed explanation why here'}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Professional news content should be excluded\n2. Professional news content should be included\n3. Other (please describe in one sentence or less)."
+            },
+            "description": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support the position your classification of this submission's position"
+            }
+          }
         },
-        "republished_content": {
-          "type": "string",
-          "description": "Does the submission explicitly comment on whether content published by news media organisations be excluded when republished on other platforms? If so, please provide a brief summary of the comment, and the reasoning behind the submitter's belief. If no comment on this aspect, return 'No comment'."
-        },
-        "changes": {
-          "type": "array",
-          "description": "Does this submission provide suggestions on what changes need to be made to the Bill? If so, please list each suggested change with a very brief summary (no more than a line in total), with the most important changes first. You do not need to describe each change in detail; just give a one-line statement of what the submitter requests to be changed. If there is no comment on this aspect, return 'No comment'.",
-          "items": {
-            "type": "string"
+        "republished_news": {
+          "type": "object",
+          "description": "Does the submission explicitly comment on whether content published by news media organisations be excluded when republished on other platforms? Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of republished news content. If the submission does discuss this issue, return which of the following categories best describes the submission’s position. Possible positions:\n1. Republished professional news content should be excluded\n2. Republished professional news content should be included\n3. Other (please describe in one sentence or less). For the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, ensuring that you extract the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}\n\nFor example, if a submission claims republished professional news content should be included, you would respond:\n\n{'position': 'Republished professional news content should be included', 'description': 'Detailed explanation why here'}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Republished professional news content should be excluded\n2. Republished professional news content should be included\n3. Other (please describe in one sentence or less)"
+            },
+            "description": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support the position your classification of this submission's position."
+            }
           }
         }
       },
