@@ -16,7 +16,7 @@
             },
             "description": {
               "type": "string",
-              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support the position your classification of this submission's position"
+              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support your classification of this submission's position."
             }
           }
         },
@@ -30,12 +30,11 @@
             },
             "description": {
               "type": "string",
-              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support the position your classification of this submission's position."
+              "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support your classification of this submission's position."
             }
           }
         }
-      },
-      "required": ["regulating_news", "republished_content", "changes"]
+      }
     }
   }
 }

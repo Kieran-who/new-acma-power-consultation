@@ -7,58 +7,98 @@
       "type": "object",
       "properties": {
         "existing_codes": {
-          "type": "string",
-          "description": "What does the submitter think of the existing industry code? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+          "type": "object",
+          "description": "Does the submitter provide a comment on the existing industry code? The 'existing industry code' refers to the voluntary industry code covering misinformation that a number of digital platforms have signed up to. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If the submitter does not make explicit comments on this aspect, return an empty object or nothing at all. If the submission does comment on the existing industry code, your response needs to first select which of the following positions the submission most closely aligns with:\n\n1. Supportive of current industry code.\n\n2. Supportive of current industry code with modifications.\n\n3. Not supportive – too onerous on digital platforms.\n\n4. Not supportive – code is not effective.\n\n5. Not supportive - a voluntary code is the wrong approach\n\n6. Other. If the submission does comment on the existing industry code, please also provide a detailed explanation as to what the submission states about the existing code, ensuring that you extract the relevant comments from the submission. Your response should be valid JSON in the format: {“position”: “string”, “explanation”: “string”}. For example, if the submission supports the current industry code, you would respond:\n\n{“position”: “Supportive of current industry code”, “explanation”: “Detailed explanation why here”}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Supportive of current industry code.\n\n2. Supportive of current industry code with modifications.\n\n3. Not supportive – too onerous on digital platforms.\n\n4. Not supportive – code is not effective.\n\n5. Not supportive - a voluntary code is the wrong approach\n\n6. Other."
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds the particular view you have returned. This must include at least one quote extracted directly from the submission that you used to support your classification of this submission's position."
+            }
+          }
         },
         "mandatory_code": {
-          "type": "string",
-          "description": "Does the submitter provide a view on the proposal to replace the voluntary industry code with a mandatory code? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+          "type": "object",
+          "description": "Does the submitter provide an explicit comment on the proposal to replace the existing voluntary industry code with a mandatory code? The 'existing industry code' refers to the voluntary industry code covering misinformation that a number of digital platforms have signed up to. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If the submitter does not make explicit comments as to the creation of a mandatory code, return an empty object or nothing at all. If the submission does explicitly comment on the proposal to replace the existing voluntary industry code with a mandatory code, your response needs to first select which of the following positions the submission most closely aligns with:\n\n1. Supportive of a mandatory code.\n\n2. Supportive but not in the existing code's current form.\n\n3. Not supportive.\n\n4. Other. Option 2 may be the case where a mandatory code is supported, but the current voluntary code needs revisions. If the submission comments on replacing the existing voluntary industry code with a mandatory code, please also provide a detailed explanation of what the submission states on this issue, ensuring that you extract the relevant comments from the submission. Your response should be valid JSON in the format: {“position”: “string”, “explanation”: “string”}. For example, if the submission supports a mandatory code but not in the current voluntary code's form, you would respond:\n\n{“position”: “Supportive but not in the existing code's current form”, “explanation”: “Detailed explanation why here”}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Supportive of a mandatory code.\n\n2. Supportive but not in the existing code's current form.\n\n3. Not supportive.\n\n4. Other."
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds the particular view you have returned. This must include at least one quote extracted directly from the submission that you used to support your classification of this submission's position."
+            }
+          }
         },
         "ACMA_standard_powers": {
-          "type": "string",
-          "description": "Does the submitter provide a viewpoint on the proposal for ACMA being given the power to make a standard (a formal regulatory standard) on misinformation or disinformation? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
+          "type": "object",
+          "description": "Does the submitter provide a comment on the proposal for the Australian Communications and Media Authority (ACMA) to have the power to create an industry standard? An industry standard is where the ACMA, or other government regulators, have legislative-backed power to register binding rules that the industry must follow. In this situation, a standard would be determined and registered by the ACMA in place of an industry-developed code in situations where the ACMA feels industry codes are inadequate or haven't been developed or where the code would take too long to develop considering the urgency or exceptional circumstances. This should not be inferred or determined by implications from other comments. If the submitter does not make explicit comments on this aspect, return null. If the submission makes explicit comments on the proposal for the ACMA to have a standard-making power, your response needs to first select which of the following positions the submission most closely aligns with:\n\n1. Supportive of a standard-making power.\n\n2. Qualified support of a standard making power.\n\n3. Not supportive.\n\nQualified support may be the case where the submission views it as a reasonable or necessary power, but greater safeguards are needed. If the submission does comment on the standard-making power, please also provide a detailed explanation as to what the submission states about the existing code, ensuring that you extract the relevant comments from the submission. Your response should be valid JSON in the format: {“position”: “string”, “explanation”: “string”}. For example, if a submission supports the standard-making power, you would respond:\n\n{“position”: “Supportive of a standard-making power”, “explanation”: “Detailed explanation why here”}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Supportive of a standard-making power.\n\n2. Qualified support of a standard making power\n\n3. Not supportive."
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds the particular view you have returned. This must include at least one quote extracted directly from the submission that you used to support your classification of this submission's position."
+            }
+          }
         },
         "excluded_services": {
-          "type": "string",
-          "description": "Does the submitter make any comments on whether there should be additional or fewer services included in the set of excluded services? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
-        },
-        "reporting_requirements": {
-          "type": "string",
-          "description": "What is the submitter’s view, if any, on the requirements for reporting and record keeping and publication of information obtained using these powers? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
-        },
-        "penalties": {
-          "type": "string",
-          "description": "Does the submitter provide a view on the penalties outlined in the proposed changes? Please provide a brief summary, and the reasoning behind the submitter's belief. If the submitter makes no comment on this aspect, return 'No comment'."
-        },
-        "included_and_excluded_services": {
           "type": "object",
-          "description": "Does the submission comment on what is or is not included in the ‘excluded services’? This should not be inferred. If the submission does comment on this issue, provide a list of services that the submission believes should be included and a list of services that the submission does not believe should be included. Only included services in either list that the submission explicitly mentions. Your response should be a JSON object with the following structure: {“include”: [], “exclude”: []} where each empty array is where you list the services that should be included or excluded. If either list is empty, return an empty array. If the submitter does not make explicit comments on this aspect, return the JSON object with both arrays empty.",
+          "description": "Does the submission comment directly on what is or is not included in the 'excluded services'? This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If the submission does explicitly comment on this issue, provide a list of services that the submission believes should be included and a list of services that the submission does not believe should be included. Only included services in either list that the submission explicitly mentions. Your response should be a valid JSON object with the following structure: {“include”: [], “exclude”: []}, where each empty array is where you list the services that should be included or excluded and the comment in the submission noting this. If either list is empty, return an empty array. If the submitter does not make explicit comments on this aspect, return the JSON object with both arrays empty.",
           "properties": {
             "include": {
               "type": "array",
-              "description": "Services the submission believes should be included in the ‘excluded services’.",
+              "description": "The list of services the submitter expressly states should be included in the 'excluded services'. If there are no services that the submission believes should be included in the 'excluded services', return an empty array.",
               "items": {
-                "type": "string"
+                "type": "object",
+                "description": "Each object should contain the name of the service and one quote from the submission where this service is expressly stated as being included in the list of 'excluded services'.",
+                "properties": {
+                  "definition": {
+                    "type": "string",
+                    "description": "The name of the service."
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "description": "A detailed description and the most relevant quote extracted from the submission stating the service should be included in the list of 'excluded services'. The description should outline why the submission believes the certain service should be included in the list of excluded services. Please detail the reasons thoroughly, making sure to extract specific comments made in the submission to support the view."
+                  }
+                }
               }
             },
             "exclude": {
               "type": "array",
-              "description": "Services the submission believes should not be included in the ‘excluded services’.",
+              "description": "The list of services the submitter expressly states should be excluded from the list of 'excluded services'. If there are no services that the submission believes should be excluded from the 'excluded services', return an empty array.",
               "items": {
-                "type": "string"
+                "type": "object",
+                "description": "Each object should contain the name of the service and one quote from the submission where this service is expressly stated as being excluded from the list of 'excluded services'.",
+                "properties": {
+                  "definition": {
+                    "type": "string",
+                    "description": "The name of the service."
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "description": "A detailed description and the most relevant quote extracted from the submission stating the service should be excluded from the list of 'excluded services'. The description should outline why the submission believes the certain service should be excluded from the list of excluded services. Please detail the reasons thoroughly, making sure to extract specific comments made in the submission to support the view."
+                  }
+                }
               }
             }
           }
+        },
+        "reporting_requirements": {
+          "type": "string",
+          "description": "What is the submitter's view on the requirements for reporting, record keeping and publication of information obtained using these powers? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If no direct or explicit comment is made on this issue, respond: 'No comment'."
+        },
+        "penalties": {
+          "type": "string",
+          "description": "What is the submitter's view on the proposed penalties? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments. If no comment is made on this issue, respond: 'No comment'."
         }
-      },
-      "required": [
-        "existing_codes",
-        "mandatory_code",
-        "ACMA_standard_powers",
-        "excluded_services",
-        "reporting_requirements",
-        "penalties"
-      ]
+      }
     }
   }
 }
