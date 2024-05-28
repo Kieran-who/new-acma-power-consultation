@@ -81,17 +81,7 @@
             }
           }
         }
-      },
-      "required": [
-        "substantive_submission",
-        "responder_category",
-        "support",
-        "motivation",
-        "regulation",
-        "perceived_impact",
-        "regulator_trust",
-        "definitions"
-      ]
+      }
     }
   }
 }

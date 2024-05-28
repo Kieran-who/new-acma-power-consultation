@@ -1,0 +1,124 @@
+{
+  "type": "function",
+  "function": {
+    "name": "submission_eval",
+    "description": "This function is used to evaluate the below submission to the consultation. This submission is from a civil society organisation or academic. Each parameter property is a question that you must respond to after carefully reading the description.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "objectives": {
+          "type": "string",
+          "description": "What does the submitter think about the objectives of the bill and its overall approach? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made within the submission to support their view. If no direct or explicit comment is made on this issue, respond: 'No comment'."
+        },
+        "existing_code": {
+          "type": "object",
+          "description": "Does the submitter provide a comment on the existing industry code? The 'existing industry code' refers to the voluntary industry code covering misinformation that a number of digital platforms have signed up to. We are only interested specificlly in this existing code. Anything that does not expressly mention the existing code should immediately be ignore for this question. When considering whether this submission provides comment on the existing industry code, the existence of an opinion on the matter should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If the submitter does not explicitly mention the existing industry code, return an empty object or nothing at all. If the submission does comment on the existing industry code, your response needs to first select which of the following positions the submission most closely aligns with:\n\n1. Supportive of current industry code.\n\n2. Supportive of current industry code with modifications.\n\n3. Not supportive – too onerous on digital platforms.\n\n4. Not supportive – code is not effective.\n\n5. Not supportive - a voluntary code is the wrong approach\n\n6. Other. If the submission does comment on the existing industry code, please also provide a detailed explanation as to what the submission states about the existing code, ensuring that you extract the relevant comments from the submission. Your response should be valid JSON in the format: {“position”: “string”, “explanation”: “string”}. For example, if the submission supports the current industry code, you would respond:\n\n{“position”: “Supportive of current industry code”, “explanation”: “Detailed explanation why here”}",
+          "properties": {
+            "position": {
+              "type": "string",
+              "description": "One of the following positions as outlined in the description:\n\n1. Supportive of current industry code.\n\n2. Supportive of current industry code with modifications.\n\n3. Not supportive – too onerous on digital platforms.\n\n4. Not supportive – code is not effective.\n\n5. Not supportive - a voluntary code is the wrong approach\n\n6. Other."
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Your detailed explanation as to why the submission holds the particular view you have returned. This must include at least one quote extracted directly from the submission that you used to support your classification of this submission's position."
+            }
+          }
+        },
+        "regulation": {
+          "type": "object",
+          "description": "Does this submission make any comment as to the preferred form of regulation? For example, does the submission make specific comments on the practicality, feasibility or merits of self-regulation, co-regulation or direct/government regulation? This question is only interested in specific and explicit comments from the submission on the FORM OF REGULATION and NOT whether or not the issue should be regulated. It is also not interested in the submission's view as to what the impacts of regulation may be. We are also not interested in the submission's view of the impacts that regulation, in general, will have. WE ARE ONLY interested in specific comments as to the form of regulation (e.g. self-regulation, co-regulation, direct/government regulation). Do not infer! If the submission makes explicit comments as to the preferred form of regulation, please return what the preferred form is. The options are: 1. Self-regulation\n2. Co-regulation\n3. Government/direct regulation\n4. No regulation. If no explicit comment on this issue, return an empty object. To help you understand the meanings of the different forms of regulation for this task, here is an overview of each:\n\n**Self-regulation**\n\nSelf-regulation is generally characterised by industry-formulated rules and codes of conduct, with industry solely responsible for enforcement.\nFor example, the content of advertising is subject to a self-regulatory system created by the Australian Association of National Advertisers (AANA) in 1998. The AANA established a Code of Ethics. The related organisation Ad Standards operates a community panel that hear complaints regarding advertising content. Similarly, the Australian Press Council (APC) administers a self-regulatory scheme for print and online news. APC formulates principles and standards and takes complaints from the public, which are heard by adjudication panels.\nThe ‘classification’ of audio material is also self-regulated under the Recorded Music Labelling Code of Practice. There is no legislation, and individual record companies are responsible for labelling recordings under a code that outlines labelling provisions and establishes a complaints handling mechanism.\n\n---\n\n**Co-regulation**\n\nCo-regulation typically refers to situations where industry develops and administers its own arrangements, but government provides legislative backing to enable the arrangements to be enforced.\nRegulation of radio and television content is co-regulatory. Various industry groups have developed codes under Part 9 of the Broadcasting Services Act 1992 (Cth). Most aspects of program content are governed by these codes, which include the Commercial Television Industry Code of Practice and the Commercial Radio Australia Code of Practice and Guidelines. Once implemented, the ACMA monitors these codes and deals with unresolved complaints made under them. A similar scheme applies to telecommunications codes developed under Part 6 of the Telecommunications Act 1997 (Cth), such as the Telecommunications Consumer Protections Code.\n\n---\n\n**Direct/government regulation**\n\nDirect government regulation comprises primary and subordinate legislation as well as rules developed by a government regulator. It is the most commonly used form of regulation. Examples of direct government regulation are: industry standards developed under Part 6 of the Telecommunications Act 1997 (Cth); programs standards developed under Part 9 of the Broadcasting Services Act 1992 (Cth); the Broadcasting Services (Events) Notice 2023; the Online Safety (Basic Online Safety Expectations) Determination 2022; Guidelines for the Classification of Films 2012.\n\n---\n\n**No regulation**\n\nNo regulation is where there is no form of self-regulation, co-regulation or direction/government regulation. It includes situations where a company develops terms of use, community guidelines or some other form of rule that apply only to itself. We refer to this last type of arrangement as ‘governance’, but for this exercise, it can be classified as ‘no regulation’.",
+          "properties": {
+            "regulation_type": {
+              "type": "string",
+              "description": "One of the following options as outlined in the description:\n\n1. Self-regulation\n2. Co-regulation\n3. Government/direct regulation\n4. No regulation."
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Please provide an indepth description of this submission's views. Please ensure that you extrace the most relevant quotes from the submission that helped you inform your response as to the regulation_type."
+            }
+          }
+        },
+        "definitions": {
+          "type": "array",
+          "description": "Does the submitter provide any comments on the definitions of 'misinformation', 'disinformation' or 'serious harm'? Return a list containing which of these definitions the submission makes an explicit comment on. We are only interested in specific comments on the definitions of 'misinformation', 'disinformation' and 'serious harm'. If the submitter makes no comment on the definitions of these specific terms, return an empty array.",
+          "items": {
+            "type": "object",
+            "description": "Each object should contain the definition being questioned and a detailed outline of the submission's criticism or comments.",
+            "properties": {
+              "definition": {
+                "type": "string",
+                "description": "One of the following options as outlined in the description:\n\n'misinformation', 'disinformation' or 'serious harm'."
+              },
+              "evidence": {
+                "type": "string",
+                "description": "A detailed outline of the submissions critique of the specific definition. Ensure you extract relevant quotes from the submission regarding the perceived deficits in the definition."
+              }
+            }
+          }
+        },
+        "impacts_on_freedom_of_speech": {
+          "type": "string",
+          "description": "What effect does the submitter believe the bill would have on freedom of speech? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments - we are after direct commentary on freedom of speech or freedom of expression (or similar content). We are not interested in how the submission believed freedom of speech or expression can be protected as this is covered in the next question. Only focus on the direct impacts the submission believes the proposed changes will have on freedom of speech. If no comment is made on this issue, respond: 'No comment'."
+        },
+        "protecting_freedom_of_speech": {
+          "type": "string",
+          "description": "Does the submitter provide comments on how freedom of speech or freedom of expression could be protected if the proposed changes were to go ahead in a modified form? Please provide a summary of the submission's view on how freedom of speech could be protected, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments - we are after direct commentary on how freedom of speech or freedom of expression (or similar content) could be protected. We are not interested in the submission's view on the potential impacts the proposed changes would have on freedom of speech (as this was covered in the previous question). Only focus on the direct comments in the submission on how freedom of speech can be protected. If no comment is made on this issue, respond: 'No comment'."
+        },
+        "excluded_and_included_services": {
+          "type": "object",
+          "description": "Does the submission comment directly on what is or is not included in the 'excluded services'? This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions. If the submission does explicitly comment on this issue, provide a list of services that the submission believes should be included and a list of services that the submission does not believe should be included. Only included services in either list that the submission explicitly mentions. Your response should be a valid JSON object with the following structure: {“include”: [], “exclude”: []}, where each empty array is where you list the services that should be included or excluded and the comment in the submission noting this. If either list is empty, return an empty array. If the submitter does not make explicit comments on this aspect, return the JSON object with both arrays empty.",
+          "properties": {
+            "include": {
+              "type": "array",
+              "description": "The list of services the submitter expressly states should be included in the 'excluded services'. If there are no services that the submission believes should be included in the 'excluded services', return an empty array.",
+              "items": {
+                "type": "object",
+                "description": "Each object should contain the name of the service and one quote from the submission where this service is expressly stated as being included in the list of 'excluded services'.",
+                "properties": {
+                  "definition": {
+                    "type": "string",
+                    "description": "The name of the service."
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "description": "A detailed description and the most relevant quote extracted from the submission stating the service should be included in the list of 'excluded services'. The description should outline why the submission believes the certain service should be included in the list of excluded services. Please detail the reasons thoroughly, making sure to extract specific comments made in the submission to support the view."
+                  }
+                }
+              }
+            },
+            "exclude": {
+              "type": "array",
+              "description": "The list of services the submitter expressly states should be excluded from the list of 'excluded services'. If there are no services that the submission believes should be excluded from the 'excluded services', return an empty array.",
+              "items": {
+                "type": "object",
+                "description": "Each object should contain the name of the service and one quote from the submission where this service is expressly stated as being excluded from the list of 'excluded services'.",
+                "properties": {
+                  "definition": {
+                    "type": "string",
+                    "description": "The name of the service."
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "description": "A detailed description and the most relevant quote extracted from the submission stating the service should be excluded from the list of 'excluded services'. The description should outline why the submission believes the certain service should be excluded from the list of excluded services. Please detail the reasons thoroughly, making sure to extract specific comments made in the submission to support the view."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "exclusion_of_government": {
+          "type": "string",
+          "description": "Does the submitter provide a view on the exclusion for government information? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit commentary on the inclusion or exclusion of government or electoral content. If no direct or explicit comment is made on this issue, respond: 'No comment'."
+        },
+        "ACMA_information_powers": {
+          "type": "string",
+          "description": "Does the submitter provide a view on the information gathering powers that changes proposed to give to the Australian Communications and Media Authority (ACMA)? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit mentions on the proposed information gathering powers given to the ACMA. If no direct or explicit comment is made on this issue, respond: 'No comment'."
+        },
+        "ACMA_data_access": {
+          "type": "string",
+          "description": "Does the submission comment on what access the Australian Communications and Media Authority (ACMA) should be given over digital platform data? Please provide a summary of the submission's view on this aspect, making sure to extract key comments made to support their view. This should not be inferred or determined by implications from other comments, or from what other comments may suggest the view on this question may be - we only are interested in explicit and direct mentions on what access to digital platform data should be given to the ACMA. If no direct or explicit comment is made on this issue, respond: 'No comment'."
+        }
+      }
+    }
+  }
+}
