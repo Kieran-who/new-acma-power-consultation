@@ -8,7 +8,7 @@
       "properties": {
         "regulating_news": {
           "type": "object",
-          "description": "Does the submission explicitly comment on whether professional news content should be excluded or included under the proposed changes? We are only interested specifically in professional news content. Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of professional news content. If no comment on this issue, return an empty object or nothing at all. If the submission does discuss this issue, return which of the following categories best describes the submission’s position. Possible positions:1. Professional news content should be excluded\n2. Professional news content should be included\n3. Other (please describe in one sentence or less). For the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, extracting the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}\n\nFor example, if a submission claims professional news content should be excluded, you would respond:\n\n{'position': 'Professional news content should be excluded', 'description': 'Detailed explanation why here'}",
+          "description": "Does the submission explicitly comment on whether professional news content should be excluded or included under the proposed changes? We are only interested specifically in professional news content. Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of professional news content. If no comment on this issue, return an empty object or nothing at all. If the submission does discuss this issue, return which of the following categories best describes the submission's position. Possible positions:\n\n1. Professional news content should be excluded\n2. Professional news content should be included\n3. Other (please describe in one sentence or less).\n\nFor the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, extracting the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}",
           "properties": {
             "position": {
               "type": "string",
@@ -22,7 +22,7 @@
         },
         "republished_news": {
           "type": "object",
-          "description": "Does the submission explicitly comment on whether content published by news media organisations be excluded when republished on other platforms? Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of republished news content. If the submission does discuss this issue, return which of the following categories best describes the submission’s position. Possible positions:\n1. Republished professional news content should be excluded\n2. Republished professional news content should be included\n3. Other (please describe in one sentence or less). For the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, ensuring that you extract the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}\n\nFor example, if a submission claims republished professional news content should be included, you would respond:\n\n{'position': 'Republished professional news content should be included', 'description': 'Detailed explanation why here'}",
+          "description": "Does the submission explicitly comment on whether content published by news media organisations be excluded when republished on other platforms? Do not infer whether this is commented on or base your response on implications from other comments, we are only interested in express and direct comments on the exclusion of republished news content. If the submission does discuss this issue, return which of the following categories best describes the submission's position. Possible positions:\n1. Republished professional news content should be excluded\n2. Republished professional news content should be included\n3. Other (please describe in one sentence or less).\n\nFor the most correct option, please also provide a detailed explanation as to why the submission holds that particular view, ensuring that you extract the relevant comments from the submission. Your response should be in valid JSON format as so: {'position': 'one of the possible outlined positions', 'description': 'Detailed description'}",
           "properties": {
             "position": {
               "type": "string",
@@ -31,6 +31,24 @@
             "description": {
               "type": "string",
               "description": "Your detailed explanation as to why the submission holds that particular view. This must include at least one quote extracted from the submission that you used to support your classification of this submission's position."
+            }
+          }
+        },
+        "definitions": {
+          "type": "array",
+          "description": "Does the submitter provide any comments on the definitions of 'misinformation', 'disinformation' or 'serious harm'? Return a list containing which of these definitions the submission makes an explicit comment on. We are only interested in specific comments on the definitions of 'misinformation', 'disinformation' and 'serious harm'. If the submitter makes no comment on the definitions of these specific terms, return an empty array.",
+          "items": {
+            "type": "object",
+            "description": "Each object should contain the definition being questioned and a detailed outline of the submission's criticism or comments.",
+            "properties": {
+              "definition": {
+                "type": "string",
+                "description": "One of the following options as outlined in the description:\n\n'misinformation', 'disinformation' or 'serious harm'."
+              },
+              "evidence": {
+                "type": "string",
+                "description": "A detailed outline of the submissions critique of the specific definition. Ensure you extract relevant quotes from the submission regarding the perceived problems in the definition."
+              }
             }
           }
         }
