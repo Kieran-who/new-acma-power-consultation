@@ -1,7 +1,7 @@
 import weaviate
 from .classes import weav_classes
 import copy
-
+# THIS CODE IS BUGGY AND NEEDS UPDATING IF DB IS TO BE UTILISED
 weav_classes_to_check = copy.deepcopy(weav_classes)
 
 def add_prop(client, class_name, prop):

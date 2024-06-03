@@ -40,8 +40,6 @@ async def get(request: DocRetrieve):
     else:
         return dm.get_all_docs(limit=2500)
 
-    
-
 @router.post("/api/content")
 async def content(request: ContentRequest):    
     dm = DocumentManager()

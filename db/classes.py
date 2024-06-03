@@ -1,5 +1,5 @@
 import weaviate.classes as wvc
-
+# BELOW WAS PRELIMINARY TEST AND NEEDS UPDATING IF DB IS TO BE UTILISED
 weav_classes = {
     "classes": [
         {
