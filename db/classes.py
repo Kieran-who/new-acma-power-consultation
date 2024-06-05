@@ -9,7 +9,7 @@ weav_classes = {
             "properties": [
                 wvc.config.Property(
                     data_type=wvc.config.DataType.TEXT,
-                    name="author",                    
+                    name="submitter",
                     description="The author of the submission",
                     skip_vectorization=True,
                 ),
@@ -20,7 +20,7 @@ weav_classes = {
                     skip_vectorization=True,
                 ),                
                 wvc.config.Property(
-                    name="responder_category",
+                    name="group",
                     data_type=wvc.config.DataType.TEXT,
                     description="Category of the responder",
                     skip_vectorization=True,
@@ -30,6 +30,12 @@ weav_classes = {
                     data_type=wvc.config.DataType.TEXT,
                     description="Does the responder support the consultation",
                     skip_vectorization=True,
+                ),   
+                wvc.config.Property(
+                    name="support_evidence",
+                    data_type=wvc.config.DataType.TEXT,
+                    description="Evidence from the consultation",
+                    skip_vectorization=True,
                 ),                 
                  wvc.config.Property(
                     name="motivations",
@@ -38,47 +44,29 @@ weav_classes = {
                     skip_vectorization=True,
                  ),
                  wvc.config.Property(
-                    name="regulation",
+                    name="regulation_type",
                     data_type=wvc.config.DataType.TEXT,
                     description= "Does this submission make any comment on the form of regulation provided?",
                     skip_vectorization=True,
                  ),
                  wvc.config.Property(
-                    name="perceived_impact",
+                    name="regulation_type_evidence",
                     data_type=wvc.config.DataType.TEXT,
-                    description= "How does the submitter perceive the impact of the proposed laws?",
+                    description= "Does this submission make any comment on the form of regulation provided?",
                     skip_vectorization=True,
                  ),
-                 wvc.config.Property(
-                    name="regulator_trust",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "Does the submission express trust or skepticism towards the ACMA's ability?",
+                  wvc.config.Property(
+                    name="definitions",
+                    data_type=wvc.config.DataType.OBJECT_ARRAY,                    
+                    description= "Does this submission make any comment on the definitions?",
                     skip_vectorization=True,
                  ),
-                 wvc.config.Property(
-                    name="changes",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "Changes the submitter would like to see in the proposed laws.",
-                    skip_vectorization=True,
-                 ),
-                 wvc.config.Property(
-                    name="file_name",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "The name of the submission file",
+                  wvc.config.Property(
+                    name="step_2",
+                    data_type=wvc.config.DataType.OBJECT,                    
+                    description= "Does this submission make any comment on their trust of the ACMA?",
                     skip_vectorization=True,
                  ),                 
-                 wvc.config.Property(
-                    name="definitions",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "thoughts on definitions",
-                    skip_vectorization=True,
-                 ),
-                 wvc.config.Property(
-                    name="questions",
-                    data_type=wvc.config.DataType.TEXT,
-                    description= "The responses to specific questions for type.",
-                    skip_vectorization=True,
-                 )
             ]
         },        
     ]
