@@ -55,6 +55,18 @@ weav_classes = {
                     description= "Does this submission make any comment on the form of regulation provided?",
                     skip_vectorization=True,
                  ),
+                 wvc.config.Property(
+                    name="regulator_trust",
+                    data_type=wvc.config.DataType.TEXT,
+                    description= "Does this submission make any comment on the form of regulation provided?",
+                    skip_vectorization=True,
+                 ),
+                 wvc.config.Property(
+                    name="regulator_trust_evidence",
+                    data_type=wvc.config.DataType.TEXT,
+                    description= "Does this submission make any comment on the form of regulation provided?",
+                    skip_vectorization=True,
+                 ),
                   wvc.config.Property(
                     name="definitions",
                     data_type=wvc.config.DataType.OBJECT_ARRAY,                    

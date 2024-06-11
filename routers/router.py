@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from models.models import ContentRequest, DocRetrieve
 from db.docs import DocumentManager
 from pathlib import Path
+import os
 
 router = APIRouter()
 
@@ -11,12 +12,19 @@ async def get_meta():
     dm = DocumentManager()
     return dm.get_docs_metadata()
 
-@router.get("/{file_path:path}")
-async def root(file_path: str):
-    if file_path:
-            base_dir = Path("./static")
+def get_file_path(doc_id, folder_path = './static/submissions'):    
+    doc_id = doc_id.split('.')[0]    
+    for file_name in os.listdir(folder_path):         
+        if file_name.startswith(doc_id):
+            return os.path.join(folder_path, file_name)
+
+@router.get("/{doc_id:path}")
+async def root(doc_id: str):
+    if doc_id:
             # Construct the full path to the file
-            file_location = base_dir / file_path
+            if doc_id.startswith('favicon'):
+                return FileResponse('./static/favicon.ico')
+            file_location = get_file_path(doc_id)            
             return FileResponse(f'{file_location}')
     else:
         return FileResponse('./static/index.html')

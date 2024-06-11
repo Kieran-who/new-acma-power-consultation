@@ -108,8 +108,8 @@ class DocumentManager:
     def get_all_docs(self, limit=5000):
         self.init_client()        
         result = self.docs.query.fetch_objects(
-            limit=limit,            
-        )        
+            limit=limit,
+        )
         docs = []
         for obj in result.objects:
             doc = obj.properties

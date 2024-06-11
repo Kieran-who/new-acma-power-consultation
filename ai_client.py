@@ -14,13 +14,13 @@ def correct_length(text: str, max_tokens = 8190, model = 'gpt-4o' ) -> str:
     else:
         encoding = tiktoken.get_encoding("cl100k_base")
     tokens = encoding.encode(text)
-    tokens = tokens[:max_tokens] # Truncate the tokens to the max_tokens length
+    tokens = tokens[:max_tokens]
     vector_safe = encoding.decode(tokens)
     return vector_safe
 
 def get_vector(text):
     retries = 10
-    safe_text = correct_length(text, EMBEDDING_MODEL)
+    safe_text = correct_length(text, 8190, EMBEDDING_MODEL)
     for attempt in range(retries):
         try:            
             embeddings = client.embeddings.create(input = safe_text, model=EMBEDDING_MODEL).data[0].embedding                                               

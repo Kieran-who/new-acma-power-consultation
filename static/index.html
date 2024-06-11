@@ -77,6 +77,9 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
+        align-items: start;
+        align-content: start;
+        text-align: start;
       }
       @media screen and (max-width: 600px) {
         table,
@@ -104,6 +107,8 @@
           border-bottom: 1px solid #eee;
           position: relative;
           padding-left: 50%;
+          align-items: start;
+          align-content: start;
         }
 
         td:before {
@@ -472,8 +477,9 @@
       }
 
       function displayQuestions(item) {
+        // return '';
         if (item === 'N/A' || !item) {
-          return item;
+          return '';
         }
         let keyValuePairs = '';
         for (const [key, value] of Object.entries(item)) {
@@ -486,6 +492,22 @@
         return keyValuePairs;
       }
       // Function to list documents
+      function toggleRowHeight(rowID) {
+        const row = document.getElementById(rowID);
+        const contentDivs = row.querySelectorAll('.content-div');
+        contentDivs.forEach((div) => {
+          const fullHeight = div.scrollHeight; // Get the full height of the content
+          console.log('Toggling height for div:', div); // Debugging statement
+          if (div.style.maxHeight === '15px' || div.style.maxHeight === '') {
+            div.style.maxHeight = `${fullHeight}px`;
+            console.log(`Setting maxHeight to ${fullHeight}px`); // Debugging statement
+          } else {
+            div.style.maxHeight = '15px';
+            console.log('Setting maxHeight to 15px'); // Debugging statement
+          }
+        });
+      }
+
       async function fetchDataAndRender(searchString, filters) {
         document.getElementById('myChart').style.display = 'none';
         document.getElementById('graph-toggle').style.display = 'none';
@@ -518,11 +540,11 @@
                   <th>Substantive</th>
                   <th>Category</th>
                   <th>Support</th>
-                  <th>Motivations</th>                  
+                  <th>Motivations</th>
                   <th>Regulation</th>
                   <th>Definitions</th>
-                  <th>Step2</th>                  
-                  <th>Metadata</th>                  
+                  <th>Step2</th>
+                  <th>Metadata</th>
                   <th>File</th>
               </tr>
           </thead>
@@ -534,32 +556,62 @@
           if (!item.motivations) {
             item.motivations = [];
           }
+          if (!item.definitions) {
+            item.definitions = [];
+          }
+          if (!item.step_2) {
+            item.step_2 = null;
+          }
+          if (!item.regulation_type) {
+            item.regulation_type = '';
+          }
           const row = document.createElement('tr');
+          row.style.maxHeight = '15px';
+          row.style.overflow = 'auto';
+          row.id = item.uniqueId;
           row.innerHTML = `
-              <td>${item.submitter}</td>
-              <td>${item.substantive_submission}</td>
-              <td>${item.group}</td>
-              <td>${item.support}</td>
-              <td><ol>${item.motivations
-                .map((i) => `<li>${i}</li>`)
-                .join('')}</ol></td>
-              <td>${item.regulation}</td>
-              <td>${item.definitions
-                .map((d) => `<h5>${d.definition}</h5><p>${d.evidence}</p>`)
-                .join('')}</td>
-              <td>${displayQuestions(item.step_2)}</td>
-              <td><a href="submissions/${item.file_name}.pdf" target="_blank">${
-            item.file_name
-          }</a></td>
-          `;
+        <td><div class="content-div">${item.submitter}</div></td>
+        <td><div class="content-div">${item.substantive_submission}</div></td>
+        <td><div class="content-div">${item.group}</div></td>
+        <td><div class="content-div">${item.support}</div></td>
+        <td><div class="content-div">${item.motivations
+          .map((i) => `'${i}'`)
+          .join('\n')}</div></td>
+        <td><div class="content-div">${item.regulation_type}</div></td>
+        <td><div class="content-div">${item.definitions
+          .map((d) => `<h5>${d.definition}</h5><p>${d.evidence}</p>`)
+          .join('')}</div></td>
+        <td><div class="content-div">${displayQuestions(
+          JSON.parse(item.step_2)
+        )}</div></td>
+        <td><div class="content-div">metadata</div></td>
+        <td><div class="content-div"><a href="submissions/${
+          item.file_name
+        }.pdf" target="_blank">${item.file_name}</a></div></td>
+    `;
+          const firstCell = row.querySelector('td');
+          firstCell.addEventListener('click', () => {
+            toggleRowHeight(item.uniqueId);
+          });
+          firstCell.style.cursor = 'pointer';
           tbody.appendChild(row);
         });
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+  .content-div {
+    max-height: 20px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+`;
+        document.head.appendChild(style);
 
         table.appendChild(tbody);
         container.appendChild(table);
         container.style.display = 'block';
         const motivations = [];
-        const motivationCounts = {}; // Object to store motivation counts
+        const motivationCounts = {};
 
         for (let i = 0; i < data.length; i++) {
           data[i].motivations.forEach((motivation) => {
