@@ -43,7 +43,7 @@ class DocumentManager:
         result = (
             self.docs.query.hybrid(
                 query=query,
-                query_properties=["author",  "responder_category", "support", "motivations", "regulation",  "perceived_impact", "regulator_trust", "file_name"],
+                query_properties=["author",  "group", "support", "motivations", "regulation_type"],
                 vector=query_vector,
                 alpha=0.75,
                 limit=2500
@@ -52,8 +52,6 @@ class DocumentManager:
         docs = []
         for obj in result.objects:            
             doc = obj.properties
-            if 'questions' in doc:
-                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs
@@ -89,7 +87,7 @@ class DocumentManager:
             query_vector = get_vector(search)
             result = (self.docs.query.hybrid(
                 query=search,
-                query_properties=["author",  "responder_category", "support", "motivations", "regulation",  "perceived_impact", "regulator_trust", "file_name"],
+                query_properties=["author",  "group", "support", "motivations", "regulation_type"],
                 vector=query_vector,
                 alpha=0.75,                
                 filters=combined_filter,
@@ -103,8 +101,6 @@ class DocumentManager:
         docs = []
         for obj in result.objects:
             doc = obj.properties
-            if 'questions' in doc:
-                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs 
@@ -117,8 +113,6 @@ class DocumentManager:
         docs = []
         for obj in result.objects:
             doc = obj.properties
-            if 'questions' in doc:
-                doc['questions'] = json.loads(doc['questions'])
             doc['uuid'] = obj.uuid
             docs.append(doc)
         return docs
@@ -138,9 +132,10 @@ class DocumentManager:
         self.docs.data.delete_by_id(id)
         return    
 
-    def new_doc(self, data_obj: Document, custom_vector, replace_existing = False):
+    def new_doc(self, data_obj: Document, replace_existing = False):
         self.init_client()
-        url_existing = self.search_docs_filtered([FilterItem(property='file_name', value=data_obj["file_name"], condition='equal')])
+        custom_vector = get_vector(data_obj["metadata"]["SUBMISSION_CONTENT"])
+        url_existing = self.search_docs_filtered([FilterItem(property='uniqueId', value=data_obj["uniqueId"], condition='equal')])
         if len(url_existing) > 0:
             if replace_existing:
                 print('delete doc, then add')

@@ -44,7 +44,7 @@ def setup_classes(client):
                     print("Error creating class")
                     print(e)
         # ensures all schema properties are up to date
-        # await check_properties(client)
+        check_properties(client)
         return
     except Exception as e:
         print("Error setting up classes")

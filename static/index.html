@@ -514,18 +514,15 @@
         table.innerHTML = `
           <thead>
               <tr>
-                  <th>ID</th>
-                  <th>Substantive Submission</th>
-                  <th>Responder Category</th>
+                  <th>Submitter</th>
+                  <th>Substantive</th>
+                  <th>Category</th>
                   <th>Support</th>
-                  <th>Motivation</th>
-                  <th>Changes</th>
+                  <th>Motivations</th>                  
                   <th>Regulation</th>
-                  <th>Perceived Impact</th>
-                  <th>Regulator Trust</th>                  
                   <th>Definitions</th>
-                  <th>Specific Questions</th>
-                  <th>Author</th>
+                  <th>Step2</th>                  
+                  <th>Metadata</th>                  
                   <th>File</th>
               </tr>
           </thead>
@@ -537,25 +534,20 @@
           if (!item.motivations) {
             item.motivations = [];
           }
-          if (!item.questions) {
-            item.questions = 'N/A';
-          }
           const row = document.createElement('tr');
           row.innerHTML = `
-              <td>${item.file_name.split('-')[0]}</td>
+              <td>${item.submitter}</td>
               <td>${item.substantive_submission}</td>
-              <td>${item.responder_category}</td>
+              <td>${item.group}</td>
               <td>${item.support}</td>
               <td><ol>${item.motivations
                 .map((i) => `<li>${i}</li>`)
                 .join('')}</ol></td>
               <td>${item.regulation}</td>
-              <td>${item.changes}</td>
-              <td>${item.perceived_impact}</td>
-              <td>${item.regulator_trust}</td>              
-              <td>${item.definitions}</td>
-              <td>${displayQuestions(item.questions)}</td>
-              <td>${item.author}</td>
+              <td>${item.definitions
+                .map((d) => `<h5>${d.definition}</h5><p>${d.evidence}</p>`)
+                .join('')}</td>
+              <td>${displayQuestions(item.step_2)}</td>
               <td><a href="submissions/${item.file_name}.pdf" target="_blank">${
             item.file_name
           }</a></td>

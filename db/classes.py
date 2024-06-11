@@ -60,13 +60,107 @@ weav_classes = {
                     data_type=wvc.config.DataType.OBJECT_ARRAY,                    
                     description= "Does this submission make any comment on the definitions?",
                     skip_vectorization=True,
+                    nested_properties=[
+                        wvc.config.Property(
+                            name="definition",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ), 
+                        wvc.config.Property(
+                            name="evidence",
+                            data_type=wvc.config.DataType.TEXT,
+                            skip_vectorization=True,
+                        ),
+                    ]
                  ),
-                  wvc.config.Property(
+                 wvc.config.Property(
                     name="step_2",
-                    data_type=wvc.config.DataType.OBJECT,                    
-                    description= "Does this submission make any comment on their trust of the ACMA?",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    description= "Does this submission make any comment on the definitions?",
                     skip_vectorization=True,
-                 ),                 
+                    ),
+                 wvc.config.Property(
+                    name="metadata",
+                    data_type=wvc.config.DataType.OBJECT,
+                    skip_vectorization=True,
+                    nested_properties=[
+                       wvc.config.Property(
+                            name="groupDefinedBy",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ),
+                        wvc.config.Property(
+                            name="removed",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ), 
+                        wvc.config.Property(
+                            name="comments",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ),
+                        wvc.config.Property(
+                            name="text_extraction_method",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ),
+                        wvc.config.Property(
+                            name="SUBMISSION_CONTENT",
+                            data_type=wvc.config.DataType.TEXT,                            
+                            skip_vectorization=True,
+                        ),
+                        wvc.config.Property(
+                            name="step_1",
+                            data_type=wvc.config.DataType.OBJECT,                            
+                            skip_vectorization=True,
+                            nested_properties=[
+                                wvc.config.Property(
+                                    name="batch_file",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                                wvc.config.Property(
+                                    name="system_fingerprint",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                                wvc.config.Property(
+                                    name="batch_id",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                            ]
+                        ),
+                        wvc.config.Property(
+                            name="step_2",
+                            data_type=wvc.config.DataType.OBJECT,                            
+                            skip_vectorization=True,
+                            nested_properties=[
+                                wvc.config.Property(
+                                    name="batch",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                                wvc.config.Property(
+                                    name="system_fingerprint",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                                wvc.config.Property(
+                                    name="batch_id",
+                                    data_type=wvc.config.DataType.TEXT,                            
+                                    skip_vectorization=True,
+                                ),
+                            ]
+                        ), 
+                    ]
+                 ), 
+                 wvc.config.Property(
+                    name="uniqueId",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    description= "",
+                    skip_vectorization=True,
+                 ),                  
             ]
         },        
     ]

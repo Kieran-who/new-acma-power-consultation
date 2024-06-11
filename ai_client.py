@@ -20,7 +20,7 @@ def correct_length(text: str, max_tokens = 8190, model = 'gpt-4o' ) -> str:
 
 def get_vector(text):
     retries = 10
-    safe_text = correct_length(text)
+    safe_text = correct_length(text, EMBEDDING_MODEL)
     for attempt in range(retries):
         try:            
             embeddings = client.embeddings.create(input = safe_text, model=EMBEDDING_MODEL).data[0].embedding                                               
