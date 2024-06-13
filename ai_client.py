@@ -1,5 +1,5 @@
 import time
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
 import json
 import tiktoken
 from config import OPENAI_KEY, TXT_MODEL, EMBEDDING_MODEL, DEFAULT_TXT_PARAMS

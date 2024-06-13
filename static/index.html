@@ -14,43 +14,9 @@
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
-      }
-      .item {
-        background-color: #f0f0f00d;
-        border-radius: 8px;
-        border: solid 1px #007bff2f;
-        padding: 20px;
-        margin-bottom: 15px;
-      }
-      .item h3 {
-        margin: 0 0 10px 0;
-      }
-      .item p {
-        margin: 0;
         font-size: 0.9em;
-      }
-      .item a {
-        display: block;
-        margin-top: 10px;
-        text-decoration: none;
-        color: #007bff;
-      }
-      #md-container h1 {
-        margin-top: 0.6em;
-        margin-bottom: 0.6em;
-      }
-      #md-container h2 {
-        margin-top: 0.4em;
-        margin-bottom: 0.4em;
-      }
-      #md-container h3 {
-        margin-top: 0.3em;
-        margin-bottom: 0.3em;
-      }
-      #md-container p {
-        margin-top: 0.2em;
-        margin-bottom: 0.3em;
-        text-align: justify;
+        max-width: 100vw;
+        margin: 0px;
       }
       img {
         max-width: 100%;
@@ -71,6 +37,8 @@
       }
       table {
         border-collapse: collapse;
+        max-width: 100%;
+        overflow-y: auto;
       }
       th,
       td {
@@ -81,6 +49,11 @@
         align-content: start;
         text-align: start;
       }
+      p {
+        margin-top: 0px;
+        margin-bottom: 8px;
+      }
+
       @media screen and (max-width: 600px) {
         table,
         thead,
@@ -131,7 +104,7 @@
         justify-content: center;
         align-items: center;
         font-family: Arial, Helvetica, sans-serif;
-        max-width: 100vw;
+        max-width: 100%;
       "
     >
       <!-- header -->
@@ -139,51 +112,34 @@
         id="header"
         style="
           display: flex;
+          position: fixed;
+          top: 0;
           align-items: center;
           justify-content: space-between;
           padding-top: 15px;
-          padding-bottom: 15px;
-          max-height: 40px;
-          width: 100%;
+          padding-bottom: 15px;          
+          height: 40px;
+          min-width: 100%;
+          overflow-y: auto;
+          background: white;
         "
       >
-        <p id="count"></p>
+        <p id="count" style="margin-bottom: 0px; margin-left: 2vw;"></p>
         <div class="filters">
-          <div class="checkbox">
-            <label for="checkbox1" style="margin-right: 3px">Substantive:</label
-            ><br />
-            <select
-              id="filter-select-substantive"
-              name="filter-select-substantive"
-            >
-              <option value="All" selected>All</option>
-              <option value="True">True</option>
-              <option value="False">False</option>
-            </select>
-          </div>
           <div class="checkbox">
             <label for="checkbox2" style="margin-right: 3px">Support:</label
             ><br />
-            <select id="filter-select" name="filter-select">
-              <option value="all" selected>All</option>
-              <option value="oppose">Oppose</option>
-              <option value="support">Support</option>
-              <option value="neutral">Neutral</option>
-              <option value="unsure">Unsure</option>
-            </select>
+            <select
+              id="filter-select-support"
+              name="filter-select-support"
+            ></select>
           </div>
           <div class="checkbox">
-            <label for="checkbox3" style="margin-right: 3px">Filter by:</label>
-            <select id="filter-select-responder" name="filter-select-responder">
-              <option value="all" selected>All</option>
-              <option value="Individual">Individual</option>
-              <option value="Political">Political</option>
-              <option value="Digital Platform">Digital Platform</option>
-              <option value="Civil Society">Civil Society</option>
-              <option value="Academic">Academic</option>
-              <option value="News">News</option>
-              <option value="Other">Other</option>
-            </select>
+            <label for="checkbox3" style="margin-right: 3px">Group:</label>
+            <select
+              id="filter-select-group"
+              name="filter-select-group"
+            ></select>
           </div>
           <div class="checkbox">
             <label for="checkbox4" style="margin-right: 3px">Motivation:</label>
@@ -191,6 +147,12 @@
               id="filter-select-motivation"
               name="filter-select-motivation"
             ></select>
+          </div>
+          <div class="checkbox">
+            <label for="checkbox4" style="margin-right: 3px"
+              >Regulation Preference:</label
+            >
+            <select id="filter-select-reg" name="filter-select-reg"></select>
           </div>
           <div class="checkbox">
             <!-- checkbox with label -->
@@ -210,22 +172,14 @@
           <i
             class="bx bx-reset"
             onclick="fetchDataAndRender(null)"
-            style="font-size: 28px; cursor: pointer; color: #007bff"
+            style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px;"
           ></i>
-        </div>
-        <!-- toggle graph -->
-        <div style="display: flex">
-          <i
-            class="bx bx-map"
-            id="graph-toggle"
-            onclick="toggleGraph()"
-            style="font-size: 28px; cursor: pointer; color: #007bff"
-          ></i>
+        </div>       
           <!-- Export to excel -->
           <img
-            src="/img/excel.png"
+            src="/excel.png"
             alt=""
-            style="cursor: pointer; height: 24px"
+            style="cursor: pointer; height: 28px; margin-left: 10px;"
             onclick="exportToExcel()"
           />
           <!-- Search input bar -->
@@ -234,8 +188,7 @@
             type="text"
             placeholder="Search..."
             style="
-              display: none;
-              margin-right: 10px;
+              display: none;              
               margin-left: 10px;
               padding: 5px;
               border-radius: 5px;
@@ -246,36 +199,19 @@
           <i
             class="bx bx-search"
             onclick="toggleSearchBarAndSearch()"
-            style="font-size: 28px; cursor: pointer; color: #007bff"
+            style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px; margin-right: 2vw"
           ></i>
         </div>
       </div>
-      <!-- Display list of documents -->
+      
       <div
         id="data-container"
         style="
           display: none;
-          max-height: calc(100vh - 58px);
-          overflow-y: auto;
-          overflow-x: auto;
-          padding: 0% 3% 2% 3%;
+          margin-top: 71px;
+          max-height: calc(100vh - 71px);                    
+          padding: 0% 2%;
           max-width: 100%;
-        "
-      ></div>
-      <!-- graph container -->
-      <canvas
-        id="myChart"
-        style="width: 100%; max-width: 700px; display: none; padding: 2%"
-      ></canvas>
-      <!-- markdown reader -->
-      <div
-        id="md-container"
-        style="
-          display: none;
-          flex-direction: column;
-          max-height: calc(100vh - 58px);
-          overflow-y: scroll;
-          padding: 0 3% 0 3%;
         "
       ></div>
     </div>
@@ -419,36 +355,18 @@
 
       // reusable function to get filters
       function getFilters() {
-        const responder = document.getElementById(
-          'filter-select-responder'
-        ).value;
-        const support = document.getElementById('filter-select').value;
-        const substantive = document.getElementById(
-          'filter-select-substantive'
-        ).value;
+        const support = document.getElementById('filter-select-support').value;
         const motivation = document.getElementById(
           'filter-select-motivation'
         ).value;
+        const group = document.getElementById('filter-select-group').value;
+        const reg = document.getElementById('filter-select-reg').value;
         const excludeAnon = document.getElementById('checkbox-exc').checked;
         let filters = [];
-        if (substantive === 'True') {
+        if (group !== 'all') {
           filters.push({
-            property: 'substantive_submission',
-            value: true,
-            condition: 'equal',
-          });
-        }
-        if (substantive === 'False') {
-          filters.push({
-            property: 'substantive_submission',
-            value: false,
-            condition: 'equal',
-          });
-        }
-        if (responder !== 'all') {
-          filters.push({
-            property: 'responder_category',
-            value: responder,
+            property: 'group',
+            value: group,
             condition: 'equal',
           });
         }
@@ -466,27 +384,64 @@
             condition: 'contains_any',
           });
         }
+        if (reg !== 'all') {
+          filters.push({
+            property: 'regulation_type',
+            value: [reg],
+            condition: 'contains_any',
+          });
+        }
         if (excludeAnon) {
           filters.push({
-            property: 'author',
+            property: 'submitter',
             value: 'anonymous',
             condition: 'not_equal',
           });
-        }
+        }        
         return filters;
       }
 
-      function displayQuestions(item) {
-        // return '';
+      function displayQuestions(item, group) {
         if (item === 'N/A' || !item) {
           return '';
         }
         let keyValuePairs = '';
+        if (group) {
+          keyValuePairs = `<a href="/${group}" target="_blank">Click to view questions</a><hr>`;
+        }
+
+        function handleItem(value, key) {
+          if (typeof value === 'object' && !Array.isArray(value)) {
+            keyValuePairs += `<p><strong>${key.replace(
+              /_/g,
+              ' '
+            )}:</strong></p>`;
+            keyValuePairs += displayQuestions(value, null);
+          } else if (Array.isArray(value)) {
+            keyValuePairs += `<p><strong>${key.replace(
+              /_/g,
+              ' '
+            )}:</strong></p>`;
+            value.forEach((element, index) => {
+              keyValuePairs += `<p><strong>${key.replace(/_/g, ' ')} [${
+                index + 1
+              }]:</strong></p>`;
+              if (typeof element === 'object') {
+                keyValuePairs += displayQuestions(element, null);
+              } else {
+                keyValuePairs += `<p>${element}</p>`;
+              }
+            });
+          } else {
+            keyValuePairs += `<p><strong>${key.replace(
+              /_/g,
+              ' '
+            )}:</strong> ${value}</p>`;
+          }
+        }
+
         for (const [key, value] of Object.entries(item)) {
-          keyValuePairs += `<p><strong>${key.replace(
-            /_/g,
-            ' '
-          )}:</strong> ${value}</p>`;
+          handleItem(value, key);
         }
 
         return keyValuePairs;
@@ -497,20 +452,15 @@
         const contentDivs = row.querySelectorAll('.content-div');
         contentDivs.forEach((div) => {
           const fullHeight = div.scrollHeight; // Get the full height of the content
-          console.log('Toggling height for div:', div); // Debugging statement
           if (div.style.maxHeight === '15px' || div.style.maxHeight === '') {
             div.style.maxHeight = `${fullHeight}px`;
-            console.log(`Setting maxHeight to ${fullHeight}px`); // Debugging statement
           } else {
             div.style.maxHeight = '15px';
-            console.log('Setting maxHeight to 15px'); // Debugging statement
           }
         });
       }
 
-      async function fetchDataAndRender(searchString, filters) {
-        document.getElementById('myChart').style.display = 'none';
-        document.getElementById('graph-toggle').style.display = 'none';
+      async function fetchDataAndRender(searchString, filters) {        
         let fetchBody = {};
         fetchBody['search'] =
           searchString && searchString !== undefined ? searchString : null;
@@ -536,15 +486,14 @@
         table.innerHTML = `
           <thead>
               <tr>
-                  <th>Submitter</th>
-                  <th>Substantive</th>
+                  <th><p>Submitter</p><small>Click to expand</small></th>                  
                   <th>Category</th>
-                  <th>Support</th>
+                  <th><p>Support</p><small>(position: evidence)</small></th>
                   <th>Motivations</th>
-                  <th>Regulation</th>
+                  <th><p>Regulation</p><small>(position: evidence)</small></th>
+                  <th><p>ACMA Trust</p><small>(position: evidence)</small></th>
                   <th>Definitions</th>
-                  <th>Step2</th>
-                  <th>Metadata</th>
+                  <th>Targetted Qs</th>
                   <th>File</th>
               </tr>
           </thead>
@@ -562,32 +511,46 @@
           if (!item.step_2) {
             item.step_2 = null;
           }
-          if (!item.regulation_type) {
-            item.regulation_type = '';
-          }
+          item.support_display = item.support
+            ? `<div class="content-div"><p><strong>${item.support.toLowerCase()}: </strong>${
+                item.support_evidence
+              }</p></div>`
+            : '';
+          item.regulation_type_dis = item.regulation_type
+            ? `<div class="content-div"><p><strong>${item.regulation_type.toLowerCase()}: </strong>${
+                item.regulation_type_evidence
+              }</p></div>`
+            : '';
+
+          item.regulator_trust = item.regulator_trust
+            ? `<div class="content-div"><p><strong>${item.regulator_trust.toLowerCase()}: </strong>${
+                item.regulator_trust_evidence
+              }</p></div>`
+            : '';
           const row = document.createElement('tr');
           row.style.maxHeight = '15px';
           row.style.overflow = 'auto';
           row.id = item.uniqueId;
           row.innerHTML = `
-        <td><div class="content-div">${item.submitter}</div></td>
-        <td><div class="content-div">${item.substantive_submission}</div></td>
+        <td><div class="content-div">${item.submitter}</div></td>        
         <td><div class="content-div">${item.group}</div></td>
-        <td><div class="content-div">${item.support}</div></td>
+        <td>${item.support_display}</td>
         <td><div class="content-div">${item.motivations
-          .map((i) => `'${i}'`)
-          .join('\n')}</div></td>
-        <td><div class="content-div">${item.regulation_type}</div></td>
+          .map((i) => `<p>${i}</p>`)
+          .join('')
+          .trim()}</div></td>
+        <td>${item.regulation_type_dis}</td>
+        <td>${item.regulator_trust}</td>
         <td><div class="content-div">${item.definitions
-          .map((d) => `<h5>${d.definition}</h5><p>${d.evidence}</p>`)
+          .map((d) => `<p><strong>${d.definition}: </strong>${d.evidence}</p>`)
           .join('')}</div></td>
         <td><div class="content-div">${displayQuestions(
-          JSON.parse(item.step_2)
+          JSON.parse(item.step_2),
+          item.group
         )}</div></td>
-        <td><div class="content-div">metadata</div></td>
-        <td><div class="content-div"><a href="submissions/${
-          item.file_name
-        }.pdf" target="_blank">${item.file_name}</a></div></td>
+        <td><div class="content-div"><a href="/${
+          item.uniqueId
+        }" target="_blank">${item.uniqueId}</a></div></td>
     `;
           const firstCell = row.querySelector('td');
           firstCell.addEventListener('click', () => {
@@ -600,9 +563,9 @@
         const style = document.createElement('style');
         style.innerHTML = `
   .content-div {
-    max-height: 20px;
+    max-height: 19px;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.2s ease;
   }
 `;
         document.head.appendChild(style);
@@ -610,6 +573,7 @@
         table.appendChild(tbody);
         container.appendChild(table);
         container.style.display = 'block';
+        // MOTIVATIONS
         const motivations = [];
         const motivationCounts = {};
 
@@ -634,6 +598,7 @@
             }
           });
         }
+        motivations.sort((a, b) => motivationCounts[b] - motivationCounts[a]);
         const motivationSelect = document.getElementById(
           'filter-select-motivation'
         );
@@ -641,6 +606,73 @@
           '<option value="all" selected>All</option>';
         motivations.forEach((motivation) => {
           motivationSelect.innerHTML += `<option value="${motivation}">${motivation} (${motivationCounts[motivation]})</option>`;
+        });
+        // REGULATION TYPES
+        const regType = [];
+        const regTypeCounts = {};
+
+        for (let r = 0; r < data.length; r++) {
+          if (!data[r].regulation_type || data[r].regulation_type === '') {
+            continue;
+          }
+          if (!regType.includes(data[r].regulation_type)) {
+            regType.push(data[r].regulation_type);
+            regTypeCounts[data[r].regulation_type] = 1;
+          } else {
+            regTypeCounts[data[r].regulation_type]++;
+          }
+        }
+        regType.sort((a, b) => regTypeCounts[b] - regTypeCounts[a]);
+        const regTypeSelect = document.getElementById('filter-select-reg');
+        regTypeSelect.innerHTML = '<option value="all" selected>All</option>';
+        regType.forEach((regType) => {
+          regTypeSelect.innerHTML += `<option value="${regType}">${regType} (${regTypeCounts[regType]})</option>`;
+        });
+        // GROUP TYPES
+        const groupType = [];
+        const groupTypeCounts = {};
+
+        for (let r = 0; r < data.length; r++) {
+          if (!data[r].group || data[r].group === '') {
+            continue;
+          }
+          if (!groupType.includes(data[r].group)) {
+            groupType.push(data[r].group);
+            groupTypeCounts[data[r].group] = 1;
+          } else {
+            groupTypeCounts[data[r].group]++;
+          }
+        }
+        groupType.sort((a, b) => groupTypeCounts[b] - groupTypeCounts[a]);
+        const groupTypeSelect = document.getElementById('filter-select-group');
+        groupTypeSelect.innerHTML = '<option value="all" selected>All</option>';
+        groupType.forEach((group) => {
+          groupTypeSelect.innerHTML += `<option value="${group}">${group} (${groupTypeCounts[group]})</option>`;
+        });
+
+        // SUPPORT TYPES
+        const supportType = [];
+        const supportTypeCounts = {};
+
+        for (let r = 0; r < data.length; r++) {
+          if (!data[r].support || data[r].support === '') {
+            continue;
+          }
+          if (!supportType.includes(data[r].support)) {
+            supportType.push(data[r].support);
+            supportTypeCounts[data[r].support] = 1;
+          } else {
+            supportTypeCounts[data[r].support]++;
+          }
+        }
+        supportType.sort((a, b) => groupTypeCounts[b] - groupTypeCounts[a]);
+        const supportTypeSelect = document.getElementById(
+          'filter-select-support'
+        );
+        supportTypeSelect.innerHTML =
+          '<option value="all" selected>All</option>';
+        supportType.forEach((support) => {
+          supportTypeSelect.innerHTML += `<option value="${support}">${support} (${supportTypeCounts[support]})</option>`;
         });
       }
 

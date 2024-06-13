@@ -36,6 +36,11 @@ class DocumentManager:
         self.init_client()                
         self.docs.data.update(id, data_obj)        
         return
+    
+    def update_single_property(self, id, property_name, value):
+        self.init_client()
+        self.docs.data.update(id, properties={property_name: value})
+        return
 
     def search_docs(self, query):
         self.init_client()        
@@ -43,7 +48,7 @@ class DocumentManager:
         result = (
             self.docs.query.hybrid(
                 query=query,
-                query_properties=["author",  "group", "support", "motivations", "regulation_type"],
+                query_properties=["submitter",  "group", "support", "motivations", "regulation_type"],
                 vector=query_vector,
                 alpha=0.75,
                 limit=2500
@@ -53,6 +58,7 @@ class DocumentManager:
         for obj in result.objects:            
             doc = obj.properties
             doc['uuid'] = obj.uuid
+            del doc['metadata']
             docs.append(doc)
         return docs
 
@@ -61,11 +67,16 @@ class DocumentManager:
         # Initialize the filter with None
         combined_filter = None
 
+        support_filter_fix = False
+
         # Iterate through the array and build the filter
         for filter_item in filter_objects:
-            property_name = filter_item.property
+            property_name = filter_item.property            
             value = filter_item.value
             condition = filter_item.condition
+
+            if (value == 'support' and condition == 'equal'):
+                support_filter_fix = True
             
             # Create the filter based on the condition
             if condition == "equal":
@@ -82,12 +93,12 @@ class DocumentManager:
                 combined_filter = current_filter
             else:
                 combined_filter = combined_filter & current_filter
-        
+                
         if search:
             query_vector = get_vector(search)
             result = (self.docs.query.hybrid(
                 query=search,
-                query_properties=["author",  "group", "support", "motivations", "regulation_type"],
+                query_properties=["submitter",  "group", "support", "motivations", "regulation_type"],
                 vector=query_vector,
                 alpha=0.75,                
                 filters=combined_filter,
@@ -98,10 +109,14 @@ class DocumentManager:
                 filters=combined_filter,
                 limit=2500
             ))
-        docs = []
+        docs = []        
         for obj in result.objects:
+            if support_filter_fix:
+                if obj.properties['support'].lower() != 'support':                         
+                    continue
             doc = obj.properties
             doc['uuid'] = obj.uuid
+            del doc['metadata']
             docs.append(doc)
         return docs 
 
@@ -114,6 +129,7 @@ class DocumentManager:
         for obj in result.objects:
             doc = obj.properties
             doc['uuid'] = obj.uuid
+            del doc['metadata']
             docs.append(doc)
         return docs
 
@@ -160,6 +176,9 @@ class DocumentManager:
             docs = self.search_docs(search)
         else:
             docs = self.get_all_docs()
+
+        for doc in docs:
+            del doc["uuid"]
         # Convert docs to a pandas DataFrame
         df = pd.DataFrame(docs)
         

@@ -24,8 +24,17 @@ async def root(doc_id: str):
             # Construct the full path to the file
             if doc_id.startswith('favicon'):
                 return FileResponse('./static/favicon.ico')
-            file_location = get_file_path(doc_id)            
-            return FileResponse(f'{file_location}')
+            if doc_id.startswith('excel'):
+                return FileResponse('./static/img/excel.png')
+            file_location = get_file_path(doc_id)     
+            if doc_id.startswith('academic') or doc_id.startswith('civil') or doc_id.startswith('political') or doc_id.startswith('government'):
+                return FileResponse('./static/targetted_qs/aca.html')   
+            if doc_id.startswith('platform') or doc_id.startswith('industry'):
+                return FileResponse('./static/targetted_qs/digital.html') 
+            if doc_id.startswith('news'):
+                return FileResponse('./static/targetted_qs/news.html')  
+            print(file_location)    
+            return FileResponse(file_location)
     else:
         return FileResponse('./static/index.html')
 

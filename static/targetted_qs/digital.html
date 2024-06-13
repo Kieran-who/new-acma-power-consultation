@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Digital Questions</title>
+    <style>
+      body {
+        --rem: 16;
+        --si-blue: #0d6efd;
+        --si-indigo: #6610f2;
+        --si-purple: #6f42c1;
+        --si-pink: #d63384;
+        --si-red: #dc3545;
+        --si-orange: #fd7e14;
+        --si-yellow: #ffc107;
+        --si-green: #198754;
+        --si-teal: #20c997;
+        --si-cyan: #0dcaf0;
+        --si-black: #000;
+        --si-white: #fff;
+        --si-gray: #9397ad;
+        --si-gray-dark: #33354d;
+        --si-gray-100: #f3f6ff;
+        --si-gray-200: #eff2fc;
+        --si-gray-300: #e2e5f1;
+        --si-gray-400: #d4d7e5;
+        --si-gray-500: #b4b7c9;
+        --si-gray-600: #9397ad;
+        --si-gray-700: #565973;
+        --si-gray-800: #33354d;
+        --si-gray-900: #0b0f19;
+        --si-primary: #6366f1;
+        --si-secondary: #eff2fc;
+        --si-success: #22c55e;
+        --si-info: #4c82f7;
+        --si-warning: #ffba08;
+        --si-danger: #ef4444;
+        --si-light: #fff;
+        --si-dark: #0b0f19;
+        --si-primary-rgb: 99, 102, 241;
+        --si-secondary-rgb: 239, 242, 252;
+        --si-success-rgb: 34, 197, 94;
+        --si-info-rgb: 76, 130, 247;
+        --si-warning-rgb: 255, 186, 8;
+        --si-danger-rgb: 239, 68, 68;
+        --si-light-rgb: 255, 255, 255;
+        --si-dark-rgb: 11, 15, 25;
+        --si-primary-text-emphasis: #3438ed;
+        --si-secondary-text-emphasis: #565973;
+        --si-success-text-emphasis: #1a9a49;
+        --si-info-text-emphasis: #1b60f5;
+        --si-warning-text-emphasis: #d49900;
+        --si-danger-text-emphasis: #eb1515;
+        --si-light-text-emphasis: #565973;
+        --si-dark-text-emphasis: #0b0f19;
+        --si-primary-bg-subtle: #eff0fe;
+        --si-secondary-bg-subtle: #f3f6ff;
+        --si-success-bg-subtle: #e9f9ef;
+        --si-info-bg-subtle: #edf3fe;
+        --si-warning-bg-subtle: #fff8e6;
+        --si-danger-bg-subtle: #fdecec;
+        --si-light-bg-subtle: #fff;
+        --si-dark-bg-subtle: #ebeced;
+        --si-primary-border-subtle: #d8d9fc;
+        --si-secondary-border-subtle: #eff2fc;
+        --si-success-border-subtle: #c8f1d7;
+        --si-info-border-subtle: #d2e0fd;
+        --si-warning-border-subtle: #ffeec1;
+        --si-danger-border-subtle: #fbd0d0;
+        --si-light-border-subtle: #f3f6ff;
+        --si-dark-border-subtle: #eff2fc;
+        --si-white-rgb: 255, 255, 255;
+        --si-black-rgb: 0, 0, 0;
+        --si-font-sans-serif: 'Manrope', sans-serif;
+        --si-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+          'Liberation Mono', 'Courier New', monospace;
+        --si-gradient: linear-gradient(
+          180deg,
+          hsla(0, 0%, 100%, 0.15),
+          hsla(0, 0%, 100%, 0)
+        );
+        --si-body-font-family: var(--si-font-sans-serif);
+        --si-body-font-size: 1rem;
+        --si-body-font-weight: 400;
+        --si-body-line-height: 1.6;
+        --si-body-color: #565973;
+        --si-body-color-rgb: 86, 89, 115;
+        --si-body-bg: #fff;
+        --si-body-bg-rgb: 255, 255, 255;
+        --si-emphasis-color: #000;
+        --si-emphasis-color-rgb: 0, 0, 0;
+        --si-secondary-color: rgba(86, 89, 115, 0.75);
+        --si-secondary-color-rgb: 86, 89, 115;
+        --si-secondary-bg: #eff2fc;
+        --si-secondary-bg-rgb: 239, 242, 252;
+        --si-tertiary-color: rgba(86, 89, 115, 0.5);
+        --si-tertiary-color-rgb: 86, 89, 115;
+        --si-tertiary-bg: #f3f6ff;
+        --si-tertiary-bg-rgb: 243, 246, 255;
+        --si-heading-color: var(--si-gray-900);
+        --si-link-color: #6366f1;
+        --si-link-color-rgb: 99, 102, 241;
+        --si-link-decoration: underline;
+        --si-link-hover-color: #3e41ee;
+        --si-link-hover-color-rgb: 62, 65, 238;
+        --si-link-hover-decoration: none;
+        --si-code-color: #e3116c;
+        --si-highlight-color: #565973;
+        --si-highlight-bg: #fff3cd;
+        --si-border-width: 1px;
+        --si-border-style: solid;
+        --si-border-color: #e2e5f1;
+        --si-border-color-translucent: rgba(0, 0, 0, 0.175);
+        --si-border-radius: 0.375rem;
+        --si-border-radius-sm: 0.25rem;
+        --si-border-radius-lg: 0.5rem;
+        --si-border-radius-xl: 0.75rem;
+        --si-border-radius-xxl: 1rem;
+        --si-border-radius-2xl: var(--si-border-radius-xxl);
+        --si-border-radius-pill: 50rem;
+        --si-box-shadow: 0 0.275rem 1.25rem rgba(11, 15, 25, 0.05),
+          0 0.25rem 0.5625rem rgba(11, 15, 25, 0.03);
+        --si-box-shadow-sm: 0 0.275rem 0.75rem -0.0625rem rgba(11, 15, 25, 0.06),
+          0 0.125rem 0.4rem -0.0625rem rgba(11, 15, 25, 0.03);
+        --si-box-shadow-lg: 0 0.3rem 1.525rem -0.375rem rgba(11, 15, 25, 0.1),
+          0 0.25rem 0.8125rem -0.125rem rgba(11, 15, 25, 0.06);
+        --si-box-shadow-inset: inset 0 0 0 transparent;
+        --si-focus-ring-width: 0.25rem;
+        --si-focus-ring-opacity: 0.25;
+        --si-focus-ring-color: rgba(99, 102, 241, 0.25);
+        --si-form-valid-color: #22c55e;
+        --si-form-valid-border-color: #22c55e;
+        --si-form-invalid-color: #ef4444;
+        --si-form-invalid-border-color: #ef4444;
+        --si-breakpoint-xs: 0;
+        --si-breakpoint-sm: 500px;
+        --si-breakpoint-md: 768px;
+        --si-breakpoint-lg: 992px;
+        --si-breakpoint-xl: 1200px;
+        --si-breakpoint-xxl: 1400px;
+        --si-user-selection-color: rgba(var(--si-primary-rgb), 0.22);
+        --si-heading-link-color: #33354d;
+        --si-heading-link-hover-color: #6366f1;
+        --toastify-color-light: #fff;
+        --toastify-color-dark: #121212;
+        --toastify-color-info: #3498db;
+        --toastify-color-success: #07bc0c;
+        --toastify-color-warning: #f1c40f;
+        --toastify-color-error: #e74c3c;
+        --toastify-color-transparent: hsla(0, 0%, 100%, 0.7);
+        --toastify-icon-color-info: var(--toastify-color-info);
+        --toastify-icon-color-success: var(--toastify-color-success);
+        --toastify-icon-color-warning: var(--toastify-color-warning);
+        --toastify-icon-color-error: var(--toastify-color-error);
+        --toastify-toast-width: 320px;
+        --toastify-toast-background: #fff;
+        --toastify-toast-min-height: 64px;
+        --toastify-toast-max-height: 800px;
+        --toastify-font-family: sans-serif;
+        --toastify-z-index: 9999;
+        --toastify-text-color-light: #757575;
+        --toastify-text-color-dark: #fff;
+        --toastify-text-color-info: #fff;
+        --toastify-text-color-success: #fff;
+        --toastify-text-color-warning: #fff;
+        --toastify-text-color-error: #fff;
+        --toastify-spinner-color: #616161;
+        --toastify-spinner-color-empty-area: #e0e0e0;
+        --toastify-color-progress-light: linear-gradient(
+          90deg,
+          #4cd964,
+          #5ac8fa,
+          #007aff,
+          #34aadc,
+          #5856d6,
+          #ff2d55
+        );
+        --toastify-color-progress-dark: #bb86fc;
+        --toastify-color-progress-info: var(--toastify-color-info);
+        --toastify-color-progress-success: var(--toastify-color-success);
+        --toastify-color-progress-warning: var(--toastify-color-warning);
+        --toastify-color-progress-error: var(--toastify-color-error);
+        --toastify-color-progress-colored: #ddd;
+        color: var(--si-body-color);
+        font-weight: var(--si-body-font-weight);
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        scrollbar-color: grey transparent;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        margin-bottom: 0px !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        text-align: justify !important;
+        line-height: 1.42 !important;
+        font-size: 14px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div      
+      style="
+        margin-bottom: 0px !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        text-align: justify !important;
+        line-height: 1.42 !important;
+        font-size: 14px !important;
+      "
+    >
+      <hr />
+      <h2>Questions asked of Digital Platform and Industry Submissions</h3>
+      <h4>Existing Code</h4>
+      <p>
+        Does the submitter provide a comment on the existing industry code? The
+        'existing industry code' refers to the voluntary industry code covering
+        misinformation that a number of digital platforms have signed up to. We
+        are only interested specifically in this existing code. Anything that
+        does not expressly mention the existing code should immediately be
+        ignored for this question. It will be obvious in the submission if the
+        existing industry code is being commented on. It may be referred to as
+        the 'existing industry code', 'industry code', 'DIGI code',
+        'Disinformation code', 'Australian Code of Practice on Disinformation
+        and Misinformation' or similar variants. When considering whether this
+        submission provides comment on the existing industry code, the existence
+        of an opinion on the matter should not be inferred or determined by
+        implications from other comments, or from what other comments may
+        suggest the view on this question may be - we are only interested in
+        explicit mentions. If the submitter does not make explicit comments on
+        this aspect, return an empty object or nothing at all. If the submission
+        does comment on the existing industry code, your response needs to first
+        select which of the following positions the submission most closely
+        aligns with:
+      </p>
+      <ol>
+        <li>Supportive of current industry code.</li>
+        <li>Supportive of current industry code with modifications.</li>
+        <li>Not supportive – too onerous on digital platforms.</li>
+        <li>Not supportive – code is not effective.</li>
+        <li>Not supportive - a voluntary code is the wrong approach</li>
+        <li>Other.</li>
+      </ol>
+      <p>
+        If the submission does comment on the existing industry code, please
+        also provide a detailed explanation as to what the submission states
+        about the existing code, ensuring that you extract the relevant comments
+        from the submission. Your response should be valid JSON in the format:
+        {"position": "string", "explanation": "string"}.
+      </p>
+      <h4>Mandatory Code</h4>
+      <p>
+        Does the submitter provide an explicit comment on the proposal to
+        replace the existing voluntary industry code with a mandatory code? The
+        'existing industry code' refers to the voluntary industry code covering
+        misinformation that a number of digital platforms have signed up to.
+        This should not be inferred or determined by implications from other
+        comments, or from what other comments may suggest the view on this
+        question may be - we only are interested in explicit mentions. If the
+        submitter does not make explicit comments as to the creation of a
+        mandatory code, return an empty object or nothing at all. If the
+        submission does explicitly comment on the proposal to replace the
+        existing voluntary industry code with a mandatory code, your response
+        needs to first select which of the following positions the submission
+        most closely aligns with:
+      </p>
+      <ol>
+        <li>Supportive of a mandatory code.</li>
+        <li>Supportive but not in the existing code's current form.</li>
+        <li>Not supportive.</li>
+        <li>Other.</li>
+      </ol>
+      <p>
+        Option 2 may be the case where a mandatory code is supported, but the
+        current voluntary code needs revisions. If the submission comments on
+        replacing the existing voluntary industry code with a mandatory code,
+        please also provide a detailed explanation of what the submission states
+        on this issue, ensuring that you extract the relevant comments from the
+        submission. Your response should be valid JSON in the format:
+        {"position": "string", "explanation": "string"}.
+      </p>
+      <h4>ACMA Standard Powers</h4>
+      <p>
+        Does the submitter provide a comment on the proposal for the Australian
+        Communications and Media Authority (ACMA) to have the power to create an
+        industry standard? An industry standard is where the ACMA, or other
+        government regulators, have legislative-backed power to register binding
+        rules that the industry must follow. In this situation, a standard would
+        be determined and registered by the ACMA in place of an
+        industry-developed code in situations where the ACMA feels industry
+        codes are inadequate or haven't been developed or where the code would
+        take too long to develop considering the urgency or exceptional
+        circumstances. This should not be inferred or determined by implications
+        from other comments. If the submitter does not make explicit comments on
+        the proposed power for the ACMA to create industry standards on the
+        issue, return an empty object or nothing at all. If the submission makes
+        explicit comments on the proposal for the ACMA to have a standard-making
+        power, your response needs to first select which of the following
+        positions the submission most closely aligns with:
+      </p>
+      <ol>
+        <li>Supportive of a standard-making power.</li>
+        <li>Qualified support of a standard making power.</li>
+        <li>Not supportive.</li>
+      </ol>
+      <p>
+        Qualified support may be the case where the submission views it as a
+        reasonable or necessary power, but greater safeguards are needed. If the
+        submission does comment on the standard-making power, please also
+        provide a detailed explanation as to what the submission states about
+        the standard making power, ensuring that you extract the relevant
+        comments from the submission. Your response should be valid JSON in the
+        format: {"position": "string", "explanation": "string"}.
+      </p>
+      <h4>Excluded Services</h4>
+      <p>
+        Does the submission comment directly on what is or is not included in
+        the list of 'excluded services'? This should not be inferred or
+        determined by implications from other comments, or from what other
+        comments may suggest the view on this question may be - we are only
+        interested in explicit mentions. If the submission does explicitly
+        comment on this issue, provide a list of services that the submission
+        believes should be included on the list of 'excluded services' and a
+        list of services that the submission does not believe should be
+        included. Only included services in either list that the submission
+        explicitly mentions. Your response should be a valid JSON object with
+        the following structure: {"include": [], "exclude": []}, where each
+        empty array is where you list the services that should be included or
+        excluded and the comment in the submission noting this. If either list
+        is empty, return an empty array. If the submitter does not make explicit
+        comments on this aspect, return the JSON object with both arrays empty
+        or return nothing at all.
+      </p>
+      <h4>Regulation</h4>
+      <p>
+        Does this submission make any comment as to the preferred form of
+        regulation? For example, does the submission make specific comments on
+        the practicality, feasibility or merits of self-regulation,
+        co-regulation or direct/government regulation? This question is only
+        interested in specific and explicit comments from the submission on the
+        FORM OF REGULATION and NOT whether or not the issue should be regulated.
+        It is also not interested in the submission's view as to what the
+        impacts of regulation may be. We are also not interested in the
+        submission's view of the impacts that regulation, in general, will have.
+        WE ARE ONLY interested in specific comments as to the form of regulation
+        (e.g. self-regulation, co-regulation, direct/government regulation). Do
+        not infer! If the submission makes explicit comments as to the preferred
+        form of regulation, please return what the preferred form is. The
+        options are: 1. Self-regulation 2. Co-regulation 3. Government/direct
+        regulation 4. No regulation. If no explicit comment on this issue,
+        return an empty object. To help you understand the meanings of the
+        different forms of regulation for this task, here is an overview of
+        each:
+      </p>
+      <p><strong>Self-regulation</strong></p>
+      <p>
+        Self-regulation is generally characterised by industry-formulated rules
+        and codes of conduct, with industry solely responsible for enforcement.
+        For example, the content of advertising is subject to a self-regulatory
+        system created by the Australian Association of National Advertisers
+        (AANA) in 1998. The AANA established a Code of Ethics. The related
+        organisation Ad Standards operates a community panel that hears
+        complaints regarding advertising content. Similarly, the Australian
+        Press Council (APC) administers a self-regulatory scheme for print and
+        online news. APC formulates principles and standards and takes
+        complaints from the public, which are heard by adjudication panels. The
+        'classification' of audio material is also self-regulated under the
+        Recorded Music Labelling Code of Practice. There is no legislation, and
+        individual record companies are responsible for labelling recordings
+        under a code that outlines labelling provisions and establishes a
+        complaints handling mechanism.
+      </p>
+      <p><strong>Co-regulation</strong></p>
+      <p>
+        Co-regulation typically refers to situations where industry develops and
+        administers its own arrangements, but government provides legislative
+        backing to enable the arrangements to be enforced. Regulation of radio
+        and television content is co-regulatory. Various industry groups have
+        developed codes under Part 9 of the Broadcasting Services Act 1992
+        (Cth). Most aspects of program content are governed by these codes,
+        which include the Commercial Television Industry Code of Practice and
+        the Commercial Radio Australia Code of Practice and Guidelines. Once
+        implemented, the ACMA monitors these codes and deals with unresolved
+        complaints made under them. A similar scheme applies to
+        telecommunications codes developed under Part 6 of the
+        Telecommunications Act 1997 (Cth), such as the Telecommunications
+        Consumer Protections Code.
+      </p>
+      <p><strong>Direct/government regulation</strong></p>
+      <p>
+        Direct government regulation comprises primary and subordinate
+        legislation as well as rules developed by a government regulator. It is
+        the most commonly used form of regulation. Examples of direct government
+        regulation are: industry standards developed under Part 6 of the
+        Telecommunications Act 1997 (Cth); programs standards developed under
+        Part 9 of the Broadcasting Services Act 1992 (Cth); the Broadcasting
+        Services (Events) Notice 2023; the Online Safety (Basic Online Safety
+        Expectations) Determination 2022; Guidelines for the Classification of
+        Films 2012.
+      </p>
+      <p><strong>No regulation</strong></p>
+      <p>
+        No regulation is where there is no form of self-regulation,
+        co-regulation or direct/government regulation. It includes situations
+        where a company develops terms of use, community guidelines or some
+        other form of rule that applies only to itself. We refer to this last
+        type of arrangement as 'governance', but for this exercise, it can be
+        classified as 'no regulation'.
+      </p>
+      <h4>Definitions</h4>
+      <p>
+        Does the submitter provide any comments on the definitions of
+        'misinformation', 'disinformation' or 'serious harm'? Return a list
+        containing which of these definitions the submission makes an explicit
+        comment on. We are only interested in specific comments on the
+        definitions of 'misinformation', 'disinformation' and 'serious harm'. If
+        the submitter makes no comment on the definitions of these specific
+        terms, return an empty array.
+      </p>
+      <h4>Reporting Requirements</h4>
+      <p>
+        What is the submitter's view on the requirements for reporting, record
+        keeping and publication of information under the proposed changes?
+        Please provide a summary of the submission's view on this aspect, making
+        sure to extract key comments made to support their view. This should not
+        be inferred or determined by implications from other comments, or from
+        what other comments may suggest the view on this question may be - we
+        are only interested in explicit mentions on this issue. If no direct or
+        explicit comment is made on this issue, respond: 'No comment' or return
+        nothing at all.
+      </p>
+      <h4>Penalties</h4>
+      <p>
+        What is the submitter's view on the proposed penalties? Please provide a
+        summary of the submission's view on this aspect, making sure to extract
+        key comments made to support their view. This should not be inferred or
+        determined by implications from other comments. If no comment is made on
+        this issue, respond: 'No comment' or return nothing at all.
+      </p>
+      <hr />
+    </div>
+  </body>
+</html>
