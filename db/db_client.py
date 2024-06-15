@@ -60,7 +60,7 @@ def setup_classes(client):
         print(e)
 
 def client_start():
-    client = weaviate.connect_to_embedded(persistence_data_path = './db/data')                
+    client = weaviate.connect_to_embedded()
     
     client.connect()
     # Creates the schema if it doesn't exist

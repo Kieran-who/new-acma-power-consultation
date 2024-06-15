@@ -128,14 +128,14 @@ class ChunkManager:
         return doc
 
     def delete_chunk(self, id):
-        self.init_client()
+        self.init_client()        
         self.chunks.data.delete_by_id(id)
         return    
 
     def new_chunk(self, data_obj: Chunk, replace_existing = False):
         self.init_client()
         custom_vector = get_vector(data_obj["chunk_text"])
-        url_existing = self.search_chunks_filtered([FilterItem(property='submission_uniqueId', value=data_obj["submission_uniqueId"], condition='equal')])
+        url_existing = self.search_chunks_filtered([FilterItem(property='submission_uniqueId', value=data_obj["submission_uniqueId"], condition='equal'),FilterItem(property='chunk_index', value=data_obj["chunk_index"], condition='equal')])
         if len(url_existing) > 0:
             if replace_existing:
                 print('deleting chunk, then adding new one')

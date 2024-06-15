@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from fastapi.responses import FileResponse, StreamingResponse
-from models.models import ContentRequest, DocRetrieve
+from models.models import ContentRequest, DocRetrieve, ChunkRetrieve, ChunkDel
 from db.docs import DocumentManager
-from pathlib import Path
+from db.chunks import ChunkManager
 import os
 
 router = APIRouter()
@@ -63,3 +63,29 @@ async def content(request: ContentRequest):
     nearby = dm.near_by(request.doc_id)
     with open(request.path, 'r') as file:
         return {"file": file.read(), "nearby": nearby}
+    
+
+@router.post("/api/chunks")
+async def get(request: ChunkRetrieve):
+    dm = ChunkManager()
+    search = request.search
+    filters = request.filters
+    excel_export = request.excel
+    search_weight = request.search_weight
+    if excel_export:
+        excel_file = dm.export_excel(filters, search)
+        headers = {
+            'Content-Disposition': 'attachment; filename="data.xlsx"'
+        }
+        return StreamingResponse(excel_file, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers=headers)
+    if filters:
+        return dm.search_chunks_filtered(filters, search, search_weight)
+    if search and not filters:
+        return dm.search_chunks(search, search_weight)
+    else:
+        return dm.get_all_chunks(limit=30000)
+    
+@router.delete("/api/chunks")
+async def delete(request: ChunkDel):
+    dm = ChunkManager()    
+    return dm.delete_chunk(request.uuid)

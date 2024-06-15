@@ -15,3 +15,12 @@ class DocRetrieve(BaseModel):
     search: Optional[str]
     filters: Optional[List[FilterItem]]
     excel: Optional[bool]
+
+class ChunkRetrieve(BaseModel):    
+    search: Optional[str]
+    filters: Optional[List[FilterItem]]
+    excel: Optional[bool]
+    search_weight: Optional[float]
+
+class ChunkDel(BaseModel):
+    uuid: str

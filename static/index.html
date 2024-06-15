@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light" />
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link
@@ -25,16 +25,21 @@
       .filters {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: start;
+        max-width: fit-content;
         align-items: center;
+        box-sizing: border-box; 
       }
       .checkbox {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: row;        
+        justify-content: space-evenly;
         align-items: center;
-        margin: 0 10px;
-      }
+        margin: 0 10px;        
+        max-width: 160px;
+        box-sizing: border-box; 
+        padding: 4px;        
+      }      
       table {
         border-collapse: collapse;
         max-width: 100%;
@@ -52,6 +57,15 @@
       p {
         margin-top: 0px;
         margin-bottom: 8px;
+      }
+
+      h2 {
+        margin: 5px 0px;
+      }
+
+      select {
+        max-width: 30%;
+        border-radius: 2%;
       }
 
       @media screen and (max-width: 600px) {
@@ -128,7 +142,7 @@
         <div class="filters">
           <div class="checkbox">
             <label for="checkbox2" style="margin-right: 3px">Support:</label
-            ><br />
+            >
             <select
               id="filter-select-support"
               name="filter-select-support"
@@ -154,16 +168,17 @@
             >
             <select id="filter-select-reg" name="filter-select-reg"></select>
           </div>
+          
+          <!-- checkbox with label -->
           <div class="checkbox">
-            <!-- checkbox with label -->
-            <div class="checkbox">
-              <label for="checkbox-exc" style="padding-right: 3px"
-                >Exclude anonymous:</label
-              >
-              <input type="checkbox" id="checkbox-exc" name="checkbox-exc" />
-            </div>
+            <label for="checkbox-exc" style="padding-right: 3px"
+              >Exclude anonymous:</label
+            >
+            <input type="checkbox" id="checkbox-exc" name="checkbox-exc" />
           </div>
-          <button
+          
+        </div>       
+        <button
             onclick="refineSearch()"
             style="cursor: pointer; color: #007bff"
           >
@@ -174,7 +189,6 @@
             onclick="fetchDataAndRender(null)"
             style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px;"
           ></i>
-        </div>       
           <!-- Export to excel -->
           <img
             src="/excel.png"
@@ -186,7 +200,7 @@
           <input
             id="search-bar"
             type="text"
-            placeholder="Search..."
+            placeholder="Search for submissions..."
             style="
               display: none;              
               margin-left: 10px;
@@ -201,8 +215,49 @@
             onclick="toggleSearchBarAndSearch()"
             style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px; margin-right: 2vw"
           ></i>
+          <!-- Advanced search -->
+          <i
+            class="bx bx-crosshair"
+            onclick="toggleAdvancedSearch()"
+            style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px; margin-right: 2vw"
+          ></i>
+          <!-- Help toggle search -->
+          <i
+            class="bx bx-info-circle"
+            onclick="toggleHelp()"
+            style="font-size: 28px; cursor: pointer; color: #007bff; margin-left: 10px; margin-right: 2vw"
+          ></i>
         </div>
       </div>
+
+      <!-- Help -->
+       <div id="help-message" style="margin-top: 71px; display: none;">          
+      <p>You can search for submissions using the search bar above - this is a hybrid keyword and semantic search of the submissions themselves. </p>
+      <p>
+      You can use the filters to find submissions of interest. Change one filter at a time and hit Refine. Clicking on the filter drop downs will show the numbers for each category with the current filters applied (e.g., if you have the Support set to 'Unsure', the tallies within the Group dropdown will only count submissions categorized as 'Unsure' in the Support field).
+</p>
+      You can hit the Excel icon to export the current results to an Excel file.
+    <p>  
+      Click on a submitter to expand the submission. Click on the submission ID to view the submission. 
+     </p> 
+      Click on the 'Advanced Search' button (cross hair icon) to search for specific text segments in submissions (more details shown when that is open).</p>
+       </div>
+
+      <!-- Filters -->
+      <div id="filters-active" style="display: none;"></div>
+
+      <!-- Sem search -->
+       <div
+        id="search-container"
+        style="
+          display: none;
+          margin-top: 71px;
+          max-height: calc(100vh - 71px);                    
+          padding: 0% 2%;
+          max-width: 100%;
+        "
+      ></div>
+
       
       <div
         id="data-container"
@@ -216,90 +271,6 @@
       ></div>
     </div>
     <script>
-      let myChart;
-      // graph
-      function toggleGraph() {
-        const graph = document.getElementById('myChart');
-        if (graph.style.display !== 'none') {
-          graph.style.display = 'none';
-        } else {
-          graph.style.display = 'block';
-        }
-      }
-      function grapher(data) {
-        document.getElementById('graph-toggle').style.display = 'block';
-        if (myChart) {
-          myChart.destroy();
-        }
-        const dataV = [];
-        for (let i = 0; i < data.length; i++) {
-          let dataObj = {
-            label: data[i].name,
-            data: [
-              {
-                x: data[i]._additional.featureProjection.vector[0],
-                y: data[i]._additional.featureProjection.vector[1],
-              },
-            ],
-          };
-          if (i === 0) {
-            dataObj['pointStyle'] = 'crossRot';
-            dataObj['pointRadius'] = 8;
-            dataObj['pointBorderColor'] = 'red';
-          }
-          dataV.push(dataObj);
-        }
-        myChart = new Chart('myChart', {
-          type: 'scatter',
-          data: {
-            datasets: dataV,
-          },
-          options: {
-            onClick: (e, elements, chart) => {
-              const dataSet = data;
-              const item = chart.getElementsAtEventForMode(
-                e,
-                'nearest',
-                { intersect: true },
-                true
-              );
-              // Get dataset index
-              const index = item[0].datasetIndex;
-              // Get url
-              const url = dataSet[index].url;
-              toggleGraph();
-              getContent(url, dataSet[index]._additional.id);
-            },
-            scales: {
-              x: {
-                // Targeting the x axis
-                ticks: {
-                  display: false, // Hides the ticks labels on the x axis
-                },
-                title: {
-                  display: false, // Hides the axis title if any
-                },
-              },
-              y: {
-                // Targeting the y axis
-                ticks: {
-                  display: false, // Hides the ticks labels on the y axis
-                },
-                title: {
-                  display: false, // Hides the axis title if any
-                },
-              },
-            },
-            plugins: {
-              legend: {
-                // This targets the chart's legend
-                display: false, // Hides the legend
-              },
-            },
-          },
-        });
-      }
-
       // MARKDOWN FORMATTING
       // Initialize markdown-it
       var md = window.markdownit();
@@ -460,12 +431,29 @@
         });
       }
 
-      async function fetchDataAndRender(searchString, filters) {        
+      async function fetchDataAndRender(searchString, filters) {      
+        document.getElementById('filters-active').style.display = 'none';
+        document.getElementById('search-container').style.display = 'none';
         let fetchBody = {};
         fetchBody['search'] =
           searchString && searchString !== undefined ? searchString : null;
         fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
         fetchBody['excel'] = null;
+
+        if (fetchBody['filters']){
+          const filterNotei = document.getElementById('filters-active');
+          filterNotei.innerHTML = '';
+          filterNotei.innerHTML += `<div style="padding: 5px;"><strong>Filters Applied:<strong></div>`
+          fetchBody['filters'].forEach((filter) => {
+            filterNotei.innerHTML += `<div style="padding: 5px; border-right: grey 1px solid; border-radius: 5px">${filter.property}: ${filter.value}</div>`;
+          });
+          filterNotei.style.display = 'flex';
+          filterNotei.style.flexDirection = 'row';
+          filterNotei.style.justifyContent = 'center';
+          filterNotei.style.alignItems = 'center';
+          filterNotei.style.marginTop = '71px';
+          filterNotei.style.marginBottom = '-60px';
+        }
 
         const res = await fetch(`/api/docs`, {
           method: 'post',
@@ -474,6 +462,9 @@
         });
         const data = await res.json();
         const container = document.getElementById('data-container');
+        if (document.getElementById('data-container').style.display != 'none') {        
+          toggleAdvancedSearch()
+        }
         container.innerHTML = '';
 
         // display count
@@ -731,7 +722,110 @@
           });
       }
       getMeta();
-      fetchDataAndRender(null);
+      fetchDataAndRender(null);    
+
+      // Show help message
+      const toggleHelp = () =>{
+        const helpMessage = document.getElementById('help-message');
+        if (helpMessage.style.display === 'none') {
+          helpMessage.style.padding = '5px 10px'          
+          helpMessage.style.alignItems = 'start';
+          helpMessage.style.display = 'flex';
+          helpMessage.style.flexDirection = 'column';
+          helpMessage.style.maxWidth = '1200px';
+          helpMessage.style.marginBottom = "-60px"
+        } else {
+          helpMessage.style.display = 'none';
+        }
+      }
+      // SEARCH CHUNKS
+      const toggleAdvancedSearch = async () => {        
+        const dataContainer = document.getElementById('data-container');
+        dataContainer.style.display = 'none';
+        const searchContainer = document.getElementById('search-container');
+        if (searchContainer.style.display === 'none') {
+          searchContainer.style.display = 'block';          
+          searchContainer.style.overflowY = 'none'
+          searchContainer.innerHTML = `
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="display: flex; margin-bottom: 20px; justify-content: center">
+              <textarea type="text" id="chunkTextInput" placeholder="Search for text segments here" 
+                      style="width: 600px; height: 60px; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"></textarea>
+              <button id="submitButton" style="padding: 10px 20px; border: none; border-radius: 4px; background-color: #007BFF; color: white; font-size: 16px; cursor: pointer;">Search</button>
+            </div>
+            <p id="infoText" style="max-width: 1200px; text-align: center; font-size: 14px; color: #555;">This is an advanced semantic search. It will retrieve specific paragraphs from submissions that are most semantically similar to the text you provide. This is handy for finding submissions that argue a specific point of interest. The filters set above will apply to the text chunks returned here, although the numbers against each item in the drop down menus are not related to the chunk search.</p>
+            <div id='chunk-content'></div>
+          </div>`
+          document.getElementById('submitButton').addEventListener('click', () => {
+            const textInput = document.getElementById('chunkTextInput').value;
+            searchChunks(textInput, null);
+                        
+        });          
+        } else {
+          searchContainer.style.display = 'none';
+          document.getElementById('data-container').style.display = 'block'; 
+        }
+      };
+
+      const searchChunks = async (searchString) =>{
+        const searchContainerContent = document.getElementById('chunk-content');
+        searchContainerContent.innerHTML = '';
+        const filters = getFilters()
+        let fetchBody = {}
+        fetchBody['search'] =
+          searchString && searchString !== undefined ? searchString : null;
+        fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
+        fetchBody['excel'] = null;
+        fetchBody['search_weight'] = 0.9
+        if (fetchBody['search'] === null || fetchBody['search'] === '') {
+          alert('Please enter a search term');
+          return;
+        }
+        const res = await fetch(`/api/chunks`, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fetchBody),
+        });
+        const data = await res.json();        
+        
+        const outerString = `<div style="display: flex; flex-direction: column; align-items: center; overflow-y: auto">|innerString|</div>`;
+        let innerString = '';
+        data.forEach((item) => {
+          const itemDiv = document.createElement('div');
+          const text = convertMarkdownToHTML(item.chunk_text)          
+          innerString += `
+          <div id=${item.uuid} style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+            <div style="max-width: 1200px">${text}</div>
+            <div style="display: flex; flex-direction: row">
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Submitter:</strong> ${item.submitter}</div> <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Group:</strong> ${item.group}</div>
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><a href="/${item.submission_uniqueId}" target="_blank">${item.submission_uniqueId}</a>
+              </div>
+              <button id=delButton_${item.uuid} style="color: red; border: 1px solid red; padding: 2px 3px; margin-right: 3px; border-radius: 5px; cursor: pointer">Delete
+              </button>
+            </div>
+          </div>
+          `;                     
+        });
+
+        searchContainerContent.innerHTML = outerString.replace(
+          '|innerString|',
+          innerString
+        );
+
+        data.forEach((item) => {          
+          document.getElementById(`delButton_${item.uuid}`).addEventListener('click', () => {            
+            fetch(`/api/chunks`, {
+              method: 'delete',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ uuid: item.uuid }),
+        });
+        document.getElementById(item.uuid).remove()
+          }) 
+        });
+
+      }
+
+
     </script>
   </body>
 </html>
