@@ -174,6 +174,53 @@ weav_classes = {
                     skip_vectorization=True,
                  ),                  
             ]
-        },        
+        },
+        {
+            "class": "Chunk",
+            "description": "Submission Chunks",
+            "vectorizer_config": wvc.config.Configure.Vectorizer.none(),
+            "properties": [  
+                wvc.config.Property(
+                    name="support",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    skip_vectorization=True,
+                ),                                                  
+                wvc.config.Property(
+                    name="regulation_type",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    skip_vectorization=True,
+                ),                
+                wvc.config.Property(
+                    name="regulator_trust",
+                    data_type=wvc.config.DataType.TEXT,                
+                    skip_vectorization=True,
+                ),                           
+                wvc.config.Property(
+                    data_type=wvc.config.DataType.TEXT,
+                    name="submitter",                    
+                    skip_vectorization=True,
+                ),                       
+                wvc.config.Property(
+                    name="group",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    skip_vectorization=True,
+                ),               
+                wvc.config.Property(
+                    name="submission_uniqueId",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    skip_vectorization=True,
+                ),
+                wvc.config.Property(
+                    name="chunk_text",
+                    data_type=wvc.config.DataType.TEXT,                    
+                    skip_vectorization=True,
+                ),
+                wvc.config.Property(
+                    name="chunk_index",
+                    data_type=wvc.config.DataType.NUMBER,                    
+                    skip_vectorization=True,
+                ),
+            ]
+        },
     ]
 }
