@@ -1,5 +1,6 @@
 from .db_instance import DBClient
 from models.models import FilterItem
+from weaviate.classes.query import MetadataQuery
 from pydantic import BaseModel
 import weaviate.classes as wvc
 import pandas as pd
@@ -37,26 +38,34 @@ class ChunkManager:
         self.chunks.data.update(id, properties={property_name: value})
         return
 
-    def search_chunks(self, query, search_weighting = 0.75):
+    def search_chunks(self, query, search_weighting = 1):
         self.init_client()        
         query_vector = get_vector(query)
-        result = (
-            self.chunks.query.hybrid(
-                query=query,
-                query_properties=["chunk_text"],
-                vector=query_vector,
-                alpha=search_weighting,
-                limit=2500
+        if search_weighting == 1:                
+            result = self.chunks.query.near_vector(
+                near_vector=query_vector,
+                limit=5000,                
+                return_metadata=MetadataQuery(distance=True)
             )            
-        )
+        else:
+            result = (
+                self.chunks.query.hybrid(
+                    query=query,
+                    query_properties=["chunk_text"],
+                    vector=query_vector,
+                    alpha=search_weighting,
+                    limit=5000
+                )            
+            )
         chunks = []
         for obj in result.objects:            
             chunk = obj.properties
-            chunk['uuid'] = obj.uuid            
+            chunk['uuid'] = obj.uuid
+            chunk['distance'] = obj.metadata.distance if hasattr(obj.metadata, 'distance') else None 
             chunks.append(chunk)
         return chunks
 
-    def search_chunks_filtered(self, filter_objects, search = None, search_weighting = 0.75):
+    def search_chunks_filtered(self, filter_objects, search = None, search_weighting = 1):
         self.init_client()
         # Initialize the filter with None
         combined_filter = None
@@ -81,26 +90,35 @@ class ChunkManager:
             if combined_filter is None:
                 combined_filter = current_filter
             else:
-                combined_filter = combined_filter & current_filter
+                combined_filter = combined_filter & current_filter         
                 
         if search:
             query_vector = get_vector(search)
-            result = (self.chunks.query.hybrid(
-                query=search,
-                query_properties=["chunk_text"],
-                vector=query_vector,
-                alpha=search_weighting,                
-                filters=combined_filter,
-                limit=2500
-            ))
+            if search_weighting == 1:                
+                result = self.chunks.query.near_vector(
+                    near_vector=query_vector,
+                    limit=5000,
+                    filters=combined_filter,
+                    return_metadata=MetadataQuery(distance=True)
+                )                
+            else:                
+                result = self.chunks.query.hybrid(
+                    query=search,
+                    query_properties=["chunk_text"],
+                    vector=query_vector,
+                    alpha=search_weighting,                
+                    filters=combined_filter,
+                    limit=5000
+                )
         else:    
-            result = (self.chunks.query.fetch_objects(
+            result = self.chunks.query.fetch_objects(
                 filters=combined_filter,
-                limit=2500
-            ))
+                limit=5000,
+            )
         chunks = []        
         for obj in result.objects:            
             doc = obj.properties
+            doc['distance'] = obj.metadata.distance if hasattr(obj.metadata, 'distance') else None 
             doc['uuid'] = obj.uuid            
             chunks.append(doc)
         return chunks 

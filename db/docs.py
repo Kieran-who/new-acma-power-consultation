@@ -96,19 +96,19 @@ class DocumentManager:
                 
         if search:
             query_vector = get_vector(search)
-            result = (self.docs.query.hybrid(
+            result = self.docs.query.hybrid(
                 query=search,
                 query_properties=["submitter",  "group", "support", "motivations", "regulation_type"],
                 vector=query_vector,
                 alpha=0.75,                
                 filters=combined_filter,
                 limit=2500
-            ))
+            )
         else:    
-            result = (self.docs.query.fetch_objects(
+            result = self.docs.query.fetch_objects(
                 filters=combined_filter,
                 limit=2500
-            ))
+            )
         docs = []        
         for obj in result.objects:
             if support_filter_fix:

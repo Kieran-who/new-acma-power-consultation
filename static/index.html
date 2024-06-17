@@ -12,6 +12,17 @@
     />
     <title>ACMA Submission Research Portal</title>
     <style>
+      #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
       body {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9em;
@@ -111,6 +122,15 @@
     </style>
   </head>
   <body>
+    <!-- PASSWORD -->
+     <div id="popup">
+        <form id="passwordForm">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+    
     <div
       style="
         display: flex;
@@ -279,43 +299,9 @@
         const toConver = markdown.split('<!--')[0];
         const htmlContent = md.render(toConver);
         return htmlContent;
-      }
-      async function getContent(itemUrl, doc_id) {
-        const res = await fetch(`/api/content`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            password: window.tempHash,
-            path: itemUrl,
-            doc_id: doc_id,
-          }),
-        });
-        const data = await res.json();
-        const container = document.getElementById('md-container');
-        container.innerHTML = '';
-        container.innerHTML = convertMarkdownToHTML(data.file);
-        document.getElementById('data-container').style.display = 'none';
-        container.style.display = 'flex';
-        let innerCurrent = `<i class="bx bx-map" id="graph-toggle" onclick="toggleGraph()" style="font-size: 28px; cursor: pointer; color: rgb(0, 123, 255); display: none;"></i>
-          <!-- Search input bar -->
-          <input id="search-bar" type="text" placeholder="Search..." style="
-              display: none;
-              margin-right: 10px;
-              padding: 5px;
-              border-radius: 5px;
-              border: 1px solid #007bff;
-            ">
-          <!-- Search icon -->
-          <i class="bx bx-search" onclick="toggleSearchBarAndSearch()" style="font-size: 28px; cursor: pointer; color: #007bff"></i>`;
-        document.getElementById(
-          'header'
-        ).innerHTML = `<i class='bx bxs-book-add' style="font-size: 28px; cursor: pointer; color: #007bff" onclick="markItemRead('${doc_id}')"></i>${innerCurrent}`;
-        grapher(data.nearby);
-      }
-      async function markItemRead(docID) {
-        return;
-      }
-      async function getMeta() {
+      }      
+      
+      async function getMeta() {        
         const res = await fetch(`/api/count`);
         const data = await res.json();
         const count = data[0].total_count;
@@ -453,18 +439,15 @@
           filterNotei.style.alignItems = 'center';
           filterNotei.style.marginTop = '71px';
           filterNotei.style.marginBottom = '-60px';
-        }
+        }        
 
         const res = await fetch(`/api/docs`, {
           method: 'post',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify(fetchBody),
         });
         const data = await res.json();
-        const container = document.getElementById('data-container');
-        if (document.getElementById('data-container').style.display != 'none') {        
-          toggleAdvancedSearch()
-        }
+        const container = document.getElementById('data-container');        
         container.innerHTML = '';
 
         // display count
@@ -593,11 +576,14 @@
         const motivationSelect = document.getElementById(
           'filter-select-motivation'
         );
-        motivationSelect.innerHTML =
-          '<option value="all" selected>All</option>';
-        motivations.forEach((motivation) => {
-          motivationSelect.innerHTML += `<option value="${motivation}">${motivation} (${motivationCounts[motivation]})</option>`;
-        });
+        if (motivations.length == 1){
+          motivationSelect.innerHTML = `<option value="${motivations[0]}" selected>${motivations[0]} (${motivationCounts[motivations[0]]})</option>`
+        } else {          
+          motivationSelect.innerHTML = '<option value="all" selected>All</option>'         
+          motivations.forEach((motivation) => {
+            motivationSelect.innerHTML += `<option value="${motivation}">${motivation} (${motivationCounts[motivation]})</option>`;
+          });
+        }
         // REGULATION TYPES
         const regType = [];
         const regTypeCounts = {};
@@ -615,10 +601,16 @@
         }
         regType.sort((a, b) => regTypeCounts[b] - regTypeCounts[a]);
         const regTypeSelect = document.getElementById('filter-select-reg');
-        regTypeSelect.innerHTML = '<option value="all" selected>All</option>';
-        regType.forEach((regType) => {
-          regTypeSelect.innerHTML += `<option value="${regType}">${regType} (${regTypeCounts[regType]})</option>`;
-        });
+        
+        if (regType.length == 1){
+          regTypeSelect.innerHTML = `<option value="${regType[0]}" selected>${regType[0]} (${regTypeCounts[regType[0]]})</option>`
+        } else {          
+          regTypeSelect.innerHTML = '<option value="all" selected>All</option>'         
+          regType.forEach((regType) => {
+            regTypeSelect.innerHTML += `<option value="${regType}">${regType} (${regTypeCounts[regType]})</option>`;
+          });
+        }
+        
         // GROUP TYPES
         const groupType = [];
         const groupTypeCounts = {};
@@ -635,11 +627,15 @@
           }
         }
         groupType.sort((a, b) => groupTypeCounts[b] - groupTypeCounts[a]);
-        const groupTypeSelect = document.getElementById('filter-select-group');
-        groupTypeSelect.innerHTML = '<option value="all" selected>All</option>';
-        groupType.forEach((group) => {
-          groupTypeSelect.innerHTML += `<option value="${group}">${group} (${groupTypeCounts[group]})</option>`;
-        });
+        const groupTypeSelect = document.getElementById('filter-select-group');        
+
+        if (groupType.length == 1){
+          groupTypeSelect.innerHTML = `<option value="${groupType[0]}" selected>${groupType[0]} (${groupTypeCounts[groupType[0]]})</option>`
+        } else {          
+          groupTypeSelect.innerHTML = '<option value="all" selected>All</option>';
+          groupType.forEach((group) => {
+          groupTypeSelect.innerHTML += `<option value="${group}">${group} (${groupTypeCounts[group]})</option>`;});
+        }
 
         // SUPPORT TYPES
         const supportType = [];
@@ -660,11 +656,17 @@
         const supportTypeSelect = document.getElementById(
           'filter-select-support'
         );
-        supportTypeSelect.innerHTML =
+        
+
+        if (supportType.length == 1){
+          supportTypeSelect.innerHTML = `<option value="${supportType[0]}" selected>${supportType[0]} (${supportTypeCounts[supportType[0]]})</option>`
+        } else {          
+          supportTypeSelect.innerHTML =
           '<option value="all" selected>All</option>';
         supportType.forEach((support) => {
           supportTypeSelect.innerHTML += `<option value="${support}">${support} (${supportTypeCounts[support]})</option>`;
         });
+        }
       }
 
       // Function to toggle the search bar
@@ -703,11 +705,11 @@
         const filters = getFilters();
         const fetchBody = {};
         fetchBody['search'] = searchTerm ? searchTerm : null;
-        fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
-        fetchBody['excel'] = true;
+        fetchBody['filters'] = filters && filters.length > 0 ? filters : null;        
+        fetchBody['excel'] = true;        
         fetch(`/api/docs`, {
           method: 'post',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify(fetchBody),
         })
           .then((response) => response.blob())
@@ -720,9 +722,7 @@
             a.click();
             window.URL.revokeObjectURL(url);
           });
-      }
-      getMeta();
-      fetchDataAndRender(null);    
+      }          
 
       // Show help message
       const toggleHelp = () =>{
@@ -776,55 +776,165 @@
           searchString && searchString !== undefined ? searchString : null;
         fetchBody['filters'] = filters && filters.length > 0 ? filters : null;
         fetchBody['excel'] = null;
-        fetchBody['search_weight'] = 0.9
+        fetchBody['search_weight'] = 1
         if (fetchBody['search'] === null || fetchBody['search'] === '') {
           alert('Please enter a search term');
           return;
-        }
+        }        
         const res = await fetch(`/api/chunks`, {
           method: 'post',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify(fetchBody),
         });
-        const data = await res.json();        
-        
+        const data = await res.json();   
+                
         const outerString = `<div style="display: flex; flex-direction: column; align-items: center; overflow-y: auto">|innerString|</div>`;
-        let innerString = '';
+        let innerString = '<hr>';
+
+        const combinedSubmissions = [];
+
+        // Helper function to find an existing group by submission_uniqueId
+        const findGroup = (array, uniqueId) => {
+          return array.find(group => group.submission_uniqueId === uniqueId);
+        };
+
+        // Iterate over the data array
         data.forEach((item) => {
+          let group = findGroup(combinedSubmissions, item.submission_uniqueId);
+          if (group) {
+            // If the submission_uniqueId already exists, push the item to the existing array
+            group.items.push(item);
+          } else {
+            // If the submission_uniqueId doesn't exist, create a new array with the item
+            combinedSubmissions.push({ submission_uniqueId: item.submission_uniqueId, items: [item] });
+          }
+        });
+
+        combinedSubmissions.forEach((key) => {
           const itemDiv = document.createElement('div');
-          const text = convertMarkdownToHTML(item.chunk_text)          
+          const text = convertMarkdownToHTML(key.items[0].chunk_text)          
           innerString += `
-          <div id=${item.uuid} style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+          <div id=${key.submission_uniqueId} style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
             <div style="max-width: 1200px">${text}</div>
             <div style="display: flex; flex-direction: row">
-              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Submitter:</strong> ${item.submitter}</div> <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Group:</strong> ${item.group}</div>
-              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><a href="/${item.submission_uniqueId}" target="_blank">${item.submission_uniqueId}</a>
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Submitter:</strong> ${key.items[0].submitter}</div> 
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Group:</strong> ${key.items[0].group}</div>
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><a href="/${key.items[0].submission_uniqueId}" target="_blank">${key.items[0].submission_uniqueId}</a>
               </div>
-              <button id=delButton_${item.uuid} style="color: red; border: 1px solid red; padding: 2px 3px; margin-right: 3px; border-radius: 5px; cursor: pointer">Delete
-              </button>
+              <button id=showAll_${key.submission_uniqueId} style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px; cursor: pointer"><strong>Total similar paragraphs:</strong> ${key.items.length}</button>              
             </div>
           </div>
-          `;                     
+          `;
         });
 
         searchContainerContent.innerHTML = outerString.replace(
           '|innerString|',
           innerString
         );
+        combinedSubmissions.forEach((key) => {
+          document.getElementById(`showAll_${key.submission_uniqueId}`).addEventListener('click', () => {
+            showAllParas(key.items, key.submission_uniqueId)
+            });
+          })         
+        }
 
-        data.forEach((item) => {          
+      const showAllParas = (paraArr, paraDivID) => {                
+        const paraDiv = document.getElementById(paraDivID);
+        const testIfDivExists = document.getElementById(`elements_${paraDivID}`);        
+        if (testIfDivExists) {
+          testIfDivExists.remove();
+          return;
+        }
+        const itemDiv = `<div id="elements_${paraDivID}" style="margin-top: 10px">|innerItems|</div>`;
+        let innerItems = '';
+        paraArr.forEach((item) => {
+          const text = convertMarkdownToHTML(item.chunk_text)          
+          innerItems += `
+          <div id=${item.uuid} style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+            <div style="max-width: 1200px">${text}</div>
+            <div style="display: flex; flex-direction: row">
+              <div style="border: 1px solid #007bff; padding: 2px 3px; margin-right: 3px; border-radius: 5px"><strong>Similarity:</strong> ${((1 - (item.distance / 2)) * 100).toFixed(1)}%</div>
+              <button id=delButton_${item.uuid} style="color: red; border: 1px solid red; padding: 2px 3px; margin-right: 3px; border-radius: 5px; cursor: pointer">Delete
+              </button>
+            </div>
+          </div>
+          `;                     
+        });
+        paraDiv.innerHTML += itemDiv.replace('|innerItems|', innerItems);
+        
+        paraArr.forEach((item) => {          
           document.getElementById(`delButton_${item.uuid}`).addEventListener('click', () => {            
             fetch(`/api/chunks`, {
               method: 'delete',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json'},
               body: JSON.stringify({ uuid: item.uuid }),
         });
         document.getElementById(item.uuid).remove()
           }) 
         });
-
+        document.getElementById(`showAll_${paraDivID}`).addEventListener('click', () => {
+            showAllParas(paraArr, paraDivID)
+            });
+          
+      };
+      
+      // PASSWORD
+      async function getPassword(fromShowPopup = false) {
+        const password = sessionStorage.getItem('password');
+        if (password) {
+            try {
+              const pwTest = await fetch(`/api/pwcheck`, {
+                method: 'get',                
+              });
+              if (!pwTest.ok){
+                throw new Error('Password is invalid');
+              }
+            } catch {              
+              sessionStorage.removeItem('password');
+              document.cookie = 'ACMA_Res_password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';              
+              if (fromShowPopup) {
+                alert('Password is invalid');
+                return null
+              } else {
+                showPopup()
+              }
+            }
+            return password
+        } else {
+          if (fromShowPopup) {
+            return null
+          } else {
+            showPopup()
+          }
+        }
       }
 
+      async function showPopup() {
+        const password = await getPassword(true)        
+        if (password) {
+            getMeta();
+            fetchDataAndRender(null);
+            return
+        } else {            
+          document.getElementById('popup').style.display = 'block';
+        }
+      }
+
+      function setCookie(name, value) {
+        document.cookie = `${name}=${value};path=/`;
+      }
+
+      document.getElementById('passwordForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const password = document.getElementById('password').value;
+          sessionStorage.setItem('password', password);
+          setCookie('ACMA_Res_password', password);
+          document.getElementById('popup').style.display = 'none';
+          getMeta();
+          fetchDataAndRender(null);
+      });
+      
+      showPopup()
 
     </script>
   </body>
